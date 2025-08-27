@@ -125,6 +125,33 @@ const PDFConverter = () => {
     }
   };
 
+  const downloadFile = async (url: string, fileName: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+      
+      toast({
+        title: "Download started",
+        description: `${fileName} is being downloaded.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Download failed",
+        description: "Failed to download the file. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const resetConverter = () => {
     setState('select');
     setUploadProgress(0);
@@ -250,15 +277,14 @@ const PDFConverter = () => {
                 
                 <div className="space-y-4">
                   {convertedFileUrls.map((url, index) => (
-                    <a
+                    <button
                       key={index}
-                      href={url}
-                      download={`page-${index + 1}.jpg`}
+                      onClick={() => downloadFile(url, `page-${index + 1}.jpg`)}
                       className="inline-flex items-center justify-center w-full bg-gradient-primary hover:shadow-glow transform hover:scale-105 transition-all duration-300 text-white font-medium py-4 px-6 rounded-xl text-lg"
                     >
                       <Download className="w-5 h-5 mr-2" />
                       Download Page {index + 1}
-                    </a>
+                    </button>
                   ))}
                 </div>
 
