@@ -149,13 +149,20 @@ const PDFToTiffConverter = () => {
 //   
 
   return (
-    <div className="min-h-[calc(100vh-65px)] bg-gradient-subtle flex  justify-center px-6">
-      <Card className="h-fit bg-black p-8 shadow-elegant border-0 bg-white/80 backdrop-blur-sm">
-        <div className="text-center space-y-1 ">
-          {/* Header */}
-          <div className="space-y-4 ">
-
-          <div className='pb-20'>
+    <div className="min-h-[calc(100vh-65px)] bg-[#f5edf0]   flex flex-col items-center  justify-start">
+       
+        <div className="w-full bg-gradient-to-r from-[#FEEDE5] to-[#FFFFFF]  px-4 py-5 mb-5">
+      <div className="flex items-center justify-center gap-3 text-white">
+        <div className="flex-shrink-0">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full border border-white/30">
+          </div>
+        </div>
+        <h1 className="text-sm text-black font-medium text-center">
+  Every tool you need to work with PDFs in one place
+        </h1>
+      </div>
+    </div>
+    <div className='pb-10'>
               <div className="h-[4rem]  flex justify-center items-center px-4">
                 <div className="flex flex-wrap justify-center py-1  items-center mx-auto text-neutral-600 dark:text-neutral-400 
                 text-2xl sm:text-3xl md:text-4xl lg:text-5xl  gap-2">Convert To
@@ -166,6 +173,13 @@ const PDFToTiffConverter = () => {
               </div>
               <p className="text-muted-foreground text-lg">Convert your PDF files to high-quality Tiff images</p>
             </div>
+    
+      <Card className="h-fit p-8 shadow-elegant border-0  backdrop-blur-sm">
+        <div className="text-center space-y-1 ">
+          {/* Header */}
+          <div className="space-y-4 ">
+
+         
             {/* <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center shadow-glow">
               <Upload className="w-10 h-10 text-white" />
             </div> */}
@@ -176,16 +190,14 @@ const PDFToTiffConverter = () => {
           <div className="space-y-6">
             {state === 'select' && (
               <div
-                className="border-2 flex items-center  p-4 space-x-4 border-dashed border-border border-[#ff7525] shadow-lg rounded-xl px-12 hover:border-primary/50 transition-all transform hover:scale-105 transition-all duration-600 text-lg  cursor-pointer bg-[#f16625]"
+                className="border-2 flex items-center justify-center space-x-6 p-4  border-border border-[#ff7525] shadow-lg rounded-xl px-12 hover:border-primary/50 transition-all transform hover:scale-105 transition-all duration-600 text-lg  cursor-pointer bg-[#f16625]"
                 onClick={() => fileInputRef.current?.click()}
               >
-                <Upload className="w-8 h-8 mx-auto text-white" />
+                <Upload className="w-8 h-8 flex gap-4 justify-center  text-white" />
                 <h3 className="text-xl font-semibold text-white ">
                   Choose PDF File
                 </h3>
-                <p className="text-white">
-                  Click here to select your PDF file
-                </p>
+              
                 <input
                   ref={fileInputRef}
                   type="file"

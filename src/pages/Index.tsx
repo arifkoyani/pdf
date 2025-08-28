@@ -7,7 +7,7 @@ const [isOpen, setIsOpen] = useState(false);
 
   return (
   <>
-  <nav className="bg-[#FFFFF] dark:bg-black  border-b-[0.1px] border-[#C3C4C6]">
+  <nav className="bg-[#FFFFF]  dark:bg-black   border-b-[0.1px] border-[#C3C4C6]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
         <img src="/logo.png" alt="Logo" width={100} height={50} />
@@ -56,7 +56,6 @@ const [isOpen, setIsOpen] = useState(false);
         </div>
       )}
     </nav>
-<PDFToTiffConverter/>
   </>
   )
 };
@@ -66,6 +65,7 @@ export default Index;
 {/* <PDFConverter /> */}
 {/* <PDFToJpgConverter/> */}
 {/* <PDFTowebpConverter/> */}
+{/* <PDFToTiffConverter/> */}
 
 
 
