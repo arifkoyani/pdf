@@ -3,12 +3,16 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, Download, Loader2 } from 'lucide-react';
+import { FlipWords } from "../components/ui/flip-words/flip-words";
 
-const API_KEY = "arifkoyani@gmail.com_jgi1iuAknb0pom7bwbaKQglbwT7i3y7Zy1d0q2xGR0Jey37CryHdGtICIOO7qVAh";
+
+const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYrvplQOGWMHHNdHRzLne0IyPsDJ";
+
 
 type AppState = 'select' | 'uploading' | 'converting' | 'ready';
 
 const PDFConverter = () => {
+  const words = ["Better", "Fast", "Perfect", "Png"];
   const [state, setState] = useState<AppState>('select');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFileUrl, setUploadedFileUrl] = useState('');
@@ -21,6 +25,9 @@ const PDFConverter = () => {
       uploadFile(file);
     }
   };
+
+
+  console.log("api this is ");
 
   const uploadFile = async (file: File) => {
     setState('uploading');
@@ -49,7 +56,7 @@ const PDFConverter = () => {
       });
 
       const data = await response.json();
-      
+
       clearInterval(uploadInterval);
       setUploadProgress(100);
 
@@ -72,7 +79,7 @@ const PDFConverter = () => {
     setState('converting');
 
     try {
-      const response = await fetch('https://api.pdf.co/v1/pdf/convert/to/jpg', {
+      const response = await fetch('https://api.pdf.co/v1/pdf/convert/to/png', {
         method: 'POST',
         headers: {
           'x-api-key': API_KEY,
@@ -98,16 +105,27 @@ const PDFConverter = () => {
     }
   };
 
-  const downloadFile = (url: string, fileName: string) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    link.target = '_blank';
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadFile = async (url: string, fileName: string) => {
+    try {
+      const response = await fetch(url, { credentials: 'omit' });
+      if (!response.ok) {
+        throw new Error('Failed to download file');
+      }
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = fileName;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(objectUrl);
+    } catch (e) {
+      // noop: optionally show a toast here
+    }
   };
+
 
   const resetConverter = () => {
     setState('select');
@@ -119,26 +137,36 @@ const PDFConverter = () => {
     }
   };
 
+
   return (
     <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-6">
-      <Card className="w-full max-w-2xl p-8 shadow-elegant border-0 bg-white/80 backdrop-blur-sm">
+      <Card className="w-full  max-w-2xl p-8 shadow-elegant border-0 bg-white/80 backdrop-blur-sm">
         <div className="text-center space-y-8">
           {/* Header */}
           <div className="space-y-4">
-            <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center shadow-glow">
+
+          <div className='py-10'>
+              <div className="h-[4rem] flex justify-center items-center px-4">
+                <div className="flex flex-wrap justify-center py-10  items-center mx-auto text-neutral-600 dark:text-neutral-400 
+                text-2xl sm:text-3xl md:text-4xl lg:text-5xl  gap-2">Convert To
+                  <div className="w-[120px] sm:w-[150px] md:w-[180px] text-left">
+                    <FlipWords words={words} />
+                  </div>
+                </div>
+              </div>
+              <p className="text-muted-foreground text-lg">Convert your PDF files to high-quality PNG images</p>
+            </div>
+            {/* <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center shadow-glow">
               <Upload className="w-10 h-10 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-foreground mb-2">PDF to Image</h1>
-              <p className="text-muted-foreground text-lg">Convert your PDF files to high-quality images</p>
-            </div>
+            </div> */}
+          
           </div>
 
           {/* Content Area */}
           <div className="space-y-6">
             {state === 'select' && (
-              <div 
-                className="border-2 border-dashed border-border rounded-xl p-12 hover:border-primary/50 transition-all duration-300 cursor-pointer bg-accent/20"
+              <div
+                className="border-2 border-dashed border-border border-[#ff7525] shadow-lg rounded-xl p-12 hover:border-primary/50 transition-all duration-300 cursor-pointer bg-accent/20"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Upload className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
@@ -180,15 +208,15 @@ const PDFConverter = () => {
                 {convertedFileUrls.map((url, index) => (
                   <Button
                     key={index}
-                    onClick={() => downloadFile(url, `page-${index + 1}.jpg`)}
-                    className="w-full bg-gradient-primary hover:shadow-glow transform hover:scale-105 transition-all duration-300 text-lg px-8 py-4 h-auto"
+                    onClick={() => downloadFile(url, `page-${index + 1}.png`)}
+                    className="w-full bg-gradient-primary shadow-xl  transform hover:scale-105 transition-all duration-500 text-lg px-8 py-4 h-auto"
                   >
                     <Download className="w-5 h-5 mr-2" />
                     Download Page {index + 1}
                   </Button>
                 ))}
-                
-                <Button 
+
+                <Button
                   onClick={resetConverter}
                   variant="outline"
                   className="mt-4"
