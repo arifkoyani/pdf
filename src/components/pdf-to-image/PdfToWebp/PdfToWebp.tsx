@@ -3,7 +3,7 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, Download, Loader2 } from 'lucide-react';
-import { FlipWords } from "../ui/flip-words/flip-words";
+import { FlipWords } from "../../ui/flip-words/flip-words";
 
 
 const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYrvplQOGWMHHNdHRzLne0IyPsDJ";
@@ -11,8 +11,8 @@ const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYr
 
 type AppState = 'select' | 'uploading' | 'converting' | 'ready';
 
-const PDFToJpgConverter = () => {
-  const words = ["Better", "Fast", "Perfect", "Jpg"];
+const PDFTowebpConverter = () => {
+  const words = ["Better", "Fast", "Perfect", "webp"];
   const [state, setState] = useState<AppState>('select');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFileUrl, setUploadedFileUrl] = useState('');
@@ -79,7 +79,7 @@ const PDFToJpgConverter = () => {
     setState('converting');
 
     try {
-      const response = await fetch('https://api.pdf.co/v1/pdf/convert/to/jpg', {
+      const response = await fetch('https://api.pdf.co/v1/pdf/convert/to/webp', {
         method: 'POST',
         headers: {
           'x-api-key': API_KEY,
@@ -154,7 +154,7 @@ const PDFToJpgConverter = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-muted-foreground text-lg">Convert your PDF files to high-quality JPG images</p>
+              <p className="text-muted-foreground text-lg">Convert your PDF files to high-quality Webp images</p>
             </div>
             {/* <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center shadow-glow">
               <Upload className="w-10 h-10 text-white" />
@@ -208,7 +208,7 @@ const PDFToJpgConverter = () => {
                 {convertedFileUrls.map((url, index) => (
                   <Button
                     key={index}
-                    onClick={() => downloadFile(url, `page-${index + 1}.jpg`)}
+                    onClick={() => downloadFile(url, `page-${index + 1}.webp`)}
                     className="w-full bg-gradient-primary shadow-xl  transform hover:scale-105 transition-all duration-500 text-lg px-8 py-4 h-auto"
                   >
                     <Download className="w-5 h-5 mr-2" />
@@ -232,4 +232,4 @@ const PDFToJpgConverter = () => {
   );
 };
 
-export default PDFToJpgConverter;
+export default PDFTowebpConverter;

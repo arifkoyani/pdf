@@ -228,7 +228,7 @@ const TxtToPdfConverter = () => {
                     <div className="space-y-6">
                         {state === 'select' && (
                             <div
-                                className="border-4 flex items-center justify-center space-x-6 p-4 px-32  border-border border-[#ff7525] shadow-lg rounded-xl px-12 hover:border-[#ff550d] transition-all transform hover:scale-100 transition-all duration-100 text-lg  cursor-pointer bg-[#f16625] hover:shadow-[#f16625]"
+                                className="border-4 flex items-center justify-center space-x-6 p-4 px-32  border-border border-[#ff7525] shadow-lg rounded-xl px-12 hover:border-[#ff550d] transition-all transform hover:scale-100 transition-all duration- text-lg  cursor-pointer bg-[#f16625] hover:shadow-[#f16625]"
                                 onClick={() => fileInputRef.current?.click()}
                             >
                                 <Upload className="w-8 h-8 flex gap-4 justify-center  text-white" />

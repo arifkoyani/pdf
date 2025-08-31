@@ -3,14 +3,16 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, Download, Loader2 } from 'lucide-react';
-import { FlipWords } from "../ui/flip-words/flip-words";
+import { FlipWords } from "../../ui/flip-words/flip-words";
+
 
 const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYrvplQOGWMHHNdHRzLne0IyPsDJ";
 
+
 type AppState = 'select' | 'uploading' | 'converting' | 'ready';
 
-const PdfToPngConverter = () => {
-  const words = ["Better", "Fast", "Perfect", "Png"];
+const PDFToTiffConverter = () => {
+  const words = ["Better", "Fast", "Perfect", "Tiff"];
   const [state, setState] = useState<AppState>('select');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFileUrl, setUploadedFileUrl] = useState('');
@@ -77,7 +79,7 @@ const PdfToPngConverter = () => {
     setState('converting');
 
     try {
-      const response = await fetch('https://api.pdf.co/v1/pdf/convert/to/png', {
+      const response = await fetch('https://api.pdf.co/v1/pdf/convert/to/tiff', {
         method: 'POST',
         headers: {
           'x-api-key': API_KEY,
@@ -93,8 +95,18 @@ const PdfToPngConverter = () => {
       const data = await response.json();
 
       if (data.error === false) {
-        setConvertedFileUrls(data.urls);
-        setState('ready');
+        const urls = Array.isArray(data.urls)
+          ? data.urls
+          : (typeof data.url === 'string' && data.url.length > 0)
+            ? [data.url]
+            : [];
+
+        if (urls.length > 0) {
+          setConvertedFileUrls(urls);
+          setState('ready');
+        } else {
+          setState('select');
+        }
       } else {
         setState('select');
       }
@@ -134,46 +146,58 @@ const PdfToPngConverter = () => {
       fileInputRef.current.value = '';
     }
   };
-
+//   
 
   return (
-    <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-6">
-      <Card className="w-full  max-w-2xl p-8 shadow-elegant border-0 bg-white/80 backdrop-blur-sm">
-        <div className="text-center space-y-8">
-          {/* Header */}
-          <div className="space-y-4">
-
-            <div className='py-10'>
-              <div className="h-[4rem] flex justify-center items-center px-4">
-                <div className="flex flex-wrap justify-center py-10  items-center mx-auto text-neutral-600 dark:text-neutral-400 
+    <div className="min-h-[calc(100vh-65px)] bg-[#f5edf0]   flex flex-col items-center  justify-start">
+       
+        <div className="w-full bg-gradient-to-r from-[#FEEDE5] to-[#FFFFFF]  px-4 py-5 mb-5">
+      <div className="flex items-center justify-center gap-3 text-white">
+        <div className="flex-shrink-0">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full border border-white/30">
+          </div>
+        </div>
+        <h1 className="text-sm text-black font-medium text-center">
+  Every tool you need to work with PDFs in one place
+        </h1>
+      </div>
+    </div>
+    <div className='pb-10'>
+              <div className="h-[4rem]  flex justify-center items-center px-4">
+                <div className="flex flex-wrap justify-center py-1  items-center mx-auto text-neutral-600 dark:text-neutral-400 
                 text-2xl sm:text-3xl md:text-4xl lg:text-5xl  gap-2">Convert To
                   <div className="w-[120px] sm:w-[150px] md:w-[180px] text-left">
                     <FlipWords words={words} />
                   </div>
                 </div>
               </div>
-              <p className="text-muted-foreground text-lg">Convert your PDF files to high-quality PNG images</p>
+              <p className="text-muted-foreground text-lg">Convert your PDF files to high-quality Tiff images</p>
             </div>
+    
+      <Card className="h-fit p-8 shadow-elegant border-0  backdrop-blur-sm">
+        <div className="text-center space-y-1 ">
+          {/* Header */}
+          <div className="space-y-4 ">
+
+         
             {/* <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center shadow-glow">
               <Upload className="w-10 h-10 text-white" />
             </div> */}
-
+          
           </div>
 
           {/* Content Area */}
           <div className="space-y-6">
             {state === 'select' && (
               <div
-                className="border-2 border-dashed border-border border-[#ff7525] shadow-lg rounded-xl p-12 hover:border-primary/50 transition-all duration-300 cursor-pointer bg-accent/20"
+                className="border-2 flex items-center justify-center space-x-6 p-4  border-border border-[#ff7525] shadow-lg rounded-xl px-12 hover:border-primary/50 transition-all transform hover:scale-105 transition-all duration-600 text-lg  cursor-pointer bg-[#f16625]"
                 onClick={() => fileInputRef.current?.click()}
               >
-                <Upload className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-xl font-semibold text-foreground mb-2">
+                <Upload className="w-8 h-8 flex gap-4 justify-center  text-white" />
+                <h3 className="text-xl font-semibold text-white ">
                   Choose PDF File
                 </h3>
-                <p className="text-muted-foreground">
-                  Click here to select your PDF file
-                </p>
+              
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -206,7 +230,7 @@ const PdfToPngConverter = () => {
                 {convertedFileUrls.map((url, index) => (
                   <Button
                     key={index}
-                    onClick={() => downloadFile(url, `page-${index + 1}.png`)}
+                    onClick={() => downloadFile(url, `page-${index + 1}.tiff`)}
                     className="w-full bg-gradient-primary shadow-xl  transform hover:scale-105 transition-all duration-500 text-lg px-8 py-4 h-auto"
                   >
                     <Download className="w-5 h-5 mr-2" />
@@ -230,4 +254,4 @@ const PdfToPngConverter = () => {
   );
 };
 
-export default PdfToPngConverter;
+export default PDFToTiffConverter;

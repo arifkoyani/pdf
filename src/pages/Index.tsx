@@ -1,15 +1,15 @@
-import DocToPdfConverter from "@/components/pdf-from-doc/doc-to-pdf/DocToPdf";
-import RTFToPdfConverter from "@/components/pdf-from-doc/Rif-to-pdf/RTFToPdf";
-import PPTXToPdfConverter from "@/components/pdf-from-doc/Rif-to-pdf/RTFToPdf";
 import TxtToPdfConverter from "@/components/pdf-from-doc/txt-to-pdf/txttopdf";
+import SearchTextDelete from "@/components/pdfsearch-text-replace/searchTextDelete";
+import SearchTextReplace from "@/components/pdfsearch-text-replace/searchTextReplace";
+import SearchTextReplaceImage from "@/components/pdfsearch-text-replace/searchTextReplaceImage";
 import { useState } from "react";
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
 
   return (
   <>
-  <nav className="bg-[#fff9f6]  dark:bg-black   border-b-[0.1px] border-[#C3C4C6]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <nav className="bg-[#fef0e9]  dark:bg-black   border-b-[0.1px] border-[#C3C4C6]">
+      <div className="max-w-7xl  mx-auto py-2">
         <div className="flex justify-between items-center h-16">
         <img src="/logo.png" alt="Logo" width={100} height={50} />
 
@@ -58,23 +58,37 @@ const [isOpen, setIsOpen] = useState(false);
       )}
     </nav>
 
+<SearchTextDelete/>
+
 
   </>
   )
 };
 
 export default Index;
+{/* <SearchTextReplaceImage/> */}
+{/* <SearchTextReplace/> */}
+
 {/* <TxtToPdfConverter/> */}
 {/* <RTFToPdfConverter/> */}
 {/* <DocToPdfConverter/> */}
+
+
 {/* <PdfToHtmlConverter/> */}
-{/* <TiffToPdfConverter/> */}
+
+
+
 {/* <PdfToPngConverter/> */}
 {/* <PDFToTiffConverter/> */}
-{/* <PngToPdfConverter/> */}
 {/* <PDFToJpgConverter/> */}
 {/* <PDFTowebpConverter/> */}
+
+
 {/* <JpgToPdfConverter/> */}
+{/* <TiffToPdfConverter/> */}
+{/* <PngToPdfConverter/> */}
+
+
 
 
 
