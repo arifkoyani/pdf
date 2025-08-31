@@ -3,15 +3,13 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, Download, Loader2 } from 'lucide-react';
-import { FlipWords } from "../components/ui/flip-words/flip-words";
-
+import { FlipWords } from "../ui/flip-words/flip-words";
 
 const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYrvplQOGWMHHNdHRzLne0IyPsDJ";
 
-
 type AppState = 'select' | 'uploading' | 'converting' | 'ready';
 
-const PDFConverter = () => {
+const PdfToPngConverter = () => {
   const words = ["Better", "Fast", "Perfect", "Png"];
   const [state, setState] = useState<AppState>('select');
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -145,7 +143,7 @@ const PDFConverter = () => {
           {/* Header */}
           <div className="space-y-4">
 
-          <div className='py-10'>
+            <div className='py-10'>
               <div className="h-[4rem] flex justify-center items-center px-4">
                 <div className="flex flex-wrap justify-center py-10  items-center mx-auto text-neutral-600 dark:text-neutral-400 
                 text-2xl sm:text-3xl md:text-4xl lg:text-5xl  gap-2">Convert To
@@ -159,7 +157,7 @@ const PDFConverter = () => {
             {/* <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-2xl flex items-center justify-center shadow-glow">
               <Upload className="w-10 h-10 text-white" />
             </div> */}
-          
+
           </div>
 
           {/* Content Area */}
@@ -232,4 +230,4 @@ const PDFConverter = () => {
   );
 };
 
-export default PDFConverter;
+export default PdfToPngConverter;

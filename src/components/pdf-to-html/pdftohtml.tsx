@@ -7,8 +7,8 @@ import { FlipWords } from '@/components/ui/flip-words/flip-words';
 const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYrvplQOGWMHHNdHRzLne0IyPsDJ";
 type AppState = 'select' | 'uploading' | 'converting' | 'ready';
 
-const TiffToPdfConverter = () => {
-    const words = ["Better", "Fast", "Perfect", "Pdf"];
+const PdfToHtmlConverter = () => {
+    const words = ["Better", "Fast", "Perfect", "Html"];
     const [state, setState] = useState<AppState>('select');
     const [uploadProgress, setUploadProgress] = useState(0);
     const [downloadProgress, setDownloadProgress] = useState(0);
@@ -19,10 +19,10 @@ const TiffToPdfConverter = () => {
 
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        if (file && (file.type === 'image/tiff')) {
+        if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
             uploadFile(file);
         } else {
-            alert('Please select a valid TIFF image file');
+            alert('Please select a valid PDF file');
         }
     };
 
@@ -53,6 +53,7 @@ const TiffToPdfConverter = () => {
             });
 
             const data = await response.json();
+            console.log('Upload response:', data);
 
             clearInterval(uploadInterval);
             setUploadProgress(100);
@@ -60,12 +61,12 @@ const TiffToPdfConverter = () => {
             if (data.error === false) {
                 setUploadedFileUrl(data.url);
                 setTimeout(() => {
-                    convertImageToPdf(data.url);
+                    convertPdfToHtml(data.url);
                 }, 500);
             } else {
                 setState('select');
                 setUploadProgress(0);
-                alert('Upload failed. Please try again.');
+                alert(`Upload failed: ${data.message || 'Please try again.'}`);
             }
         } catch (error) {
             console.error('Upload error:', error);
@@ -75,11 +76,11 @@ const TiffToPdfConverter = () => {
         }
     };
 
-    const convertImageToPdf = async (fileUrl: string) => {
+    const convertPdfToHtml = async (fileUrl: string) => {
         setState('converting');
 
         try {
-            const response = await fetch('https://api.pdf.co/v1/pdf/convert/from/image', {
+            const response = await fetch('https://api.pdf.co/v1/pdf/convert/to/html', {
                 method: 'POST',
                 headers: {
                     'x-api-key': API_KEY,
@@ -93,6 +94,7 @@ const TiffToPdfConverter = () => {
             });
 
             const data = await response.json();
+            console.log('Conversion response:', data); // Debug log
 
             if (data.error === false) {
                 const urls = Array.isArray(data.urls)
@@ -106,11 +108,11 @@ const TiffToPdfConverter = () => {
                     setState('ready');
                 } else {
                     setState('select');
-                    alert('Conversion failed. Please try again.');
+                    alert('Conversion failed. No HTML files generated. Please try again.');
                 }
             } else {
                 setState('select');
-                alert('Conversion failed. Please try again.');
+                alert(`Conversion failed: ${data.message || 'Please try again.'}`);
             }
         } catch (error) {
             console.error('Conversion error:', error);
@@ -201,7 +203,7 @@ const TiffToPdfConverter = () => {
                         </div>
                     </div>
                 </div>
-                <p className="text-muted-foreground text-lg">Convert your TIFF images to high-quality PDF documents</p>
+                <p className="text-muted-foreground text-lg">Convert your PDF images to high-quality HTML documents</p>
         
 
             </div>
@@ -222,18 +224,18 @@ const TiffToPdfConverter = () => {
                     <div className="space-y-6">
                         {state === 'select' && (
                             <div
-                                className="border-2 flex items-center justify-center space-x-6 p-4  border-border border-[#ff7525] shadow-lg rounded-xl px-12 hover:border-primary/50 transition-all transform hover:scale-100 transition-all duration-600 text-lg  cursor-pointer bg-[#f16625]"
+                                className="border-4 flex items-center justify-center space-x-6 p-4 px-32  border-border border-[#ff7525] shadow-lg rounded-xl px-12 hover:border-[#ff550d] transition-all transform hover:scale-100 transition-all duration-100 text-lg  cursor-pointer bg-[#f16625] hover:shadow-[#f16625]"
                                 onClick={() => fileInputRef.current?.click()}
                             >
                                 <Upload className="w-8 h-8 flex gap-4 justify-center  text-white" />
                                 <h3 className="text-xl font-semibold text-white ">
-                                    Choose TIFF Image
+                                    Choose PDF File
                                 </h3>
 
                                 <input
                                     ref={fileInputRef}
                                     type="file"
-                                    accept=".tiff"
+                                    accept=".pdf"
                                     onChange={handleFileSelect}
                                     className="hidden"
                                 />
@@ -254,7 +256,7 @@ const TiffToPdfConverter = () => {
                         {state === 'converting' && (
                             <div className="flex flex-col items-center space-y-4">
                                 <Loader2 className="w-16 h-16 text-primary animate-spin" />
-                                <p className="text-muted-foreground">Converting image to PDF...</p>
+                                <p className="text-muted-foreground">Converting PDF to HTML.....</p>
                             </div>
                         )}
 
@@ -263,11 +265,11 @@ const TiffToPdfConverter = () => {
                                 {convertedFileUrls.map((url, index) => (
                                     <Button
                                         key={index}
-                                        onClick={() => downloadFile(url, `converted-image-${index + 1}.pdf`)}
+                                        onClick={() => downloadFile(url, `converted-image-${index + 1}.html`)}
                                         className="w-full bg-gradient-primary shadow-xl  shadow-[#fff7ed]/90 transform hover:scale-105 transition-all duration-500 text-lg px-8 py-4 h-auto"
                                     >
                                         <Download className="w-5 h-5 mr-2" />
-                                        Download PDF {index + 1}
+                                        Download HTML {index + 1}
                                     </Button>
                                 ))}
 
@@ -298,4 +300,4 @@ const TiffToPdfConverter = () => {
     );
 };
 
-export default TiffToPdfConverter;
+export default PdfToHtmlConverter;

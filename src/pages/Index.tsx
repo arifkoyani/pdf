@@ -1,10 +1,8 @@
-
-import JpgToPdfConverter from '@/components/Image-to-pdf/Jpg-to-pdf/JpgToPdf';
-import PngToPdfConverter from '@/components/Image-to-pdf/png-to-pdf/PngToPdf';
-import TiffToPdfConverter from '@/components/Image-to-pdf/tiff-to-pdf/tifftopdf';
-import PDFToTiffConverter from '@/components/PdfToTiff/PdfToTiff';
+import DocToPdfConverter from "@/components/pdf-from-doc/doc-to-pdf/DocToPdf";
+import RTFToPdfConverter from "@/components/pdf-from-doc/Rif-to-pdf/RTFToPdf";
+import PPTXToPdfConverter from "@/components/pdf-from-doc/Rif-to-pdf/RTFToPdf";
+import TxtToPdfConverter from "@/components/pdf-from-doc/txt-to-pdf/txttopdf";
 import { useState } from "react";
-
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
 
@@ -17,7 +15,7 @@ const [isOpen, setIsOpen] = useState(false);
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8">
-            <a href="/" className="text-black dark:text-white hover:text-[#ff7726]">
+            <a href="/pdf-to-png" className="text-black dark:text-white hover:text-[#ff7726]">
               Home
             </a>
             <a href="/features" className="text-black dark:text-white hover:text-[#ff7726]">
@@ -59,14 +57,19 @@ const [isOpen, setIsOpen] = useState(false);
         </div>
       )}
     </nav>
-    <TiffToPdfConverter/>
+
 
   </>
   )
 };
 
 export default Index;
-{/* <PDFConverter /> */}
+{/* <TxtToPdfConverter/> */}
+{/* <RTFToPdfConverter/> */}
+{/* <DocToPdfConverter/> */}
+{/* <PdfToHtmlConverter/> */}
+{/* <TiffToPdfConverter/> */}
+{/* <PdfToPngConverter/> */}
 {/* <PDFToTiffConverter/> */}
 {/* <PngToPdfConverter/> */}
 {/* <PDFToJpgConverter/> */}
