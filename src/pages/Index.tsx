@@ -1,7 +1,11 @@
-import TxtToPdfConverter from "@/components/pdf-from-doc/txt-to-pdf/txttopdf";
+
+import PdfFormsInfoReader from "@/components/Pdf-info-reader/PDFFormsInfoReader";
+import PdfInfoReader from "@/components/Pdf-info-reader/PdfinforReader";
+import PdfToJsonByAi from "@/components/pdf-to-json/pdf-to-json-by-ai/PdfToJsonByAi";
+import PdfToJsonConverter from "@/components/pdf-to-json/PdfToJson/PdfToJson";
+import PdfToTextClassifier from "@/components/pdf-to-text/PdfToText";
+import PdfToText from "@/components/pdf-to-text/PdfToText";
 import SearchTextDelete from "@/components/pdfsearch-text-replace/searchTextDelete";
-import SearchTextReplace from "@/components/pdfsearch-text-replace/searchTextReplace";
-import SearchTextReplaceImage from "@/components/pdfsearch-text-replace/searchTextReplaceImage";
 import { useState } from "react";
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
@@ -58,14 +62,20 @@ const [isOpen, setIsOpen] = useState(false);
       )}
     </nav>
 
-<SearchTextDelete/>
-
-
+<PdfFormsInfoReader/>
   </>
   )
 };
 
 export default Index;
+{/* <PdfInfoReader/>  */}
+
+{/* <PdfToTextClassifier/> */}
+
+{/* <PdfToJsonByAi/> */}
+{/* <SearchTextDelete/> */}
+    // <PdfToJsonConverter/>
+
 {/* <SearchTextReplaceImage/> */}
 {/* <SearchTextReplace/> */}
 
