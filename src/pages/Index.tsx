@@ -1,19 +1,4 @@
-
-import PdfFormsInfoReader from "@/components/Pdf-info-reader/PDFFormsInfoReader";
-import PdfInfoReader from "@/components/Pdf-info-reader/PdfinforReader";
-import JpgToXls from "@/components/pdf-to-excel/PdfToXls/JpgToXls";
-import PdfToXls from "@/components/pdf-to-excel/PdfToXls/PdfToXls";
-import PngToXls from "@/components/pdf-to-excel/PdfToXls/PngToXls";
-import JpgToXlsx from "@/components/pdf-to-excel/PdfToXlsx/JpgToXlsx";
-import PdfToXlsx from "@/components/pdf-to-excel/PdfToXlsx/PdfToXlsx";
-import PngToXlsx from "@/components/pdf-to-excel/PdfToXlsx/PngToXlsx";
-import PdfToJsonByAi from "@/components/pdf-to-json/pdf-to-json-by-ai/PdfToJsonByAi";
-import PdfToJsonConverter from "@/components/pdf-to-json/PdfToJson/PdfToJson";
-import PdfToTextClassifier from "@/components/pdf-to-text/PdfToText";
-import PdfToText from "@/components/pdf-to-text/PdfToText";
-import PdfToXml from "@/components/pdf-to-xml/pdfToXml";
-import SearchTextDelete from "@/components/pdfsearch-text-replace/searchTextDelete";
-import Spinner from "@/components/ui/loader/loader";
+import RotatPagesUsingAi from "@/components/rotate-selected-pages/RotatePageeUsingAi";
 import { useState } from "react";
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
@@ -69,15 +54,25 @@ const [isOpen, setIsOpen] = useState(false);
         </div>
       )}
     </nav>
-    <PdfToXml/>
+
   </>
   )
 };
 
 
-
-
 export default Index;
+{/* <RotatPagesUsingAi/> */}
+
+{/* <RotateSelectedPages/> */}
+
+{/* <PdfDeletePages/> */}
+
+{/* <UrlToPdfConverter/> */}
+
+{/* <CsvToPdfConverter/> */}
+
+
+{/* <PdfToXml/> */}
 
 {/* <JpgToXlsx/> */}
 {/* <PdfToXlsx/> */}
