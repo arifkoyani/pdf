@@ -3,6 +3,7 @@ import RemovePasswordFromPdf from "@/components/pdf-add-remove-password/Remove-P
 import CompressPdf from "@/components/pdf-compressor/PdfCompress";
 import RotatPagesUsingAi from "@/components/rotate-selected-pages/RotatePageeUsingAi";
 import Spinner from "@/components/ui/loader/loader";
+import AIInvoiceParser from "@/components/aI-Invoice-parser/AIInvoiceParser"
 import { useState } from "react";
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
@@ -59,8 +60,6 @@ const [isOpen, setIsOpen] = useState(false);
       )}
 
     </nav>
-    <AddPasswordToPdf/>
-
   </>
   )
 };
@@ -68,6 +67,11 @@ const [isOpen, setIsOpen] = useState(false);
 
 
 export default Index;
+
+{/* <AIInvoiceParser/> */}
+
+{/* <AddPasswordToPdf/> */}
+
 {/* <RemovePasswordFromPdf/> */}
 
 {/* <CompressPdf/> */}

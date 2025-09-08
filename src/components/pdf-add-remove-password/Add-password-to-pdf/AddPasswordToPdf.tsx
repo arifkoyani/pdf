@@ -5,8 +5,6 @@ import { Copy, Upload } from 'lucide-react';
 import { FlipWords } from '@/components/ui/flip-words/flip-words';
 import Spinner from '@/components/ui/loader/loader';
 import { Loader2, Download } from 'lucide-react';
-import SendEmail from '@/components/send-email/SendEmail';
-import SendUploadedPdfEmail from '@/components/send-email/SendEmail';
 import SendPdfEmail from '@/components/send-email/SendEmail';
 
 const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYrvplQOGWMHHNdHRzLne0IyPsDJ";

@@ -24,17 +24,33 @@ const SendPdfEmail: React.FC<SendEmailProps> = ({ toEmail, fileUrl }) => {
 
     const payload = {
       url: fileUrl,
-      from: `Arif Koyani <${SMTP_USERNAME}>`,
+      from: `WhatPDF <${SMTP_USERNAME}>`,
       to: toEmail,
-      subject: "PDF File",
-      bodytext: "Please check the attached PDF file.",
-      bodyHtml: "<p>Please check the attached PDF file.</p>",
+      subject: "Download Your Password-Protected PDF from WhatPDF",
+      bodytext: `Hello,
+    
+    Your PDF has been securely protected with a password using WhatPDF.com.
+    You can download your protected PDF from the following link: ${fileUrl}
+    
+    Keep your password safe to access the file.
+    
+    Thank you,
+    The WhatPDF Team`,
+      bodyHtml: `
+        <p>Hello,</p>
+        <p>Your PDF has been securely converted and processed using <strong>WhatPDF.com</strong>.</p>
+        <p>You can download your  PDF from the link below:</p>
+        <p><a href="${fileUrl}" target="_blank">Download PDF</a></p>
+        <p>Keep your pdf safe to access the file.</p>
+        <p>Thank you,<br />The WhatPDF Team</p>
+      `,
       smtpserver: "smtp.gmail.com",
       smtpport: "587",
       smtpusername: SMTP_USERNAME,
       smtppassword: SMTP_PASSWORD,
       async: false,
     };
+    
 
     try {
       const response = await fetch("https://api.pdf.co/v1/email/send", {
@@ -48,7 +64,7 @@ const SendPdfEmail: React.FC<SendEmailProps> = ({ toEmail, fileUrl }) => {
 
       const data = await response.json();
       if (!data.error) {
-        toast("Email sent successfully ✅");
+        toast("Email sent successfully");
       } else {
         alert("Failed: " + (data.message || "Unknown error"));
       }
