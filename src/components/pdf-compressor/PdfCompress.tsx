@@ -11,8 +11,8 @@ const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYr
 
 type AppState = 'select' | 'uploading' | 'converting' | 'ready';
 
-const RotatPagesUsingAi = () => {
-  const words = ["Better", "Pdf", "Perfect", "Pages"];
+const CompressPdf = () => {
+  const words = ["Better", "Pdf", "Perfect", "compress"];
   const [state, setState] = useState<AppState>('select');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFileUrl, setUploadedFileUrl] = useState('');
@@ -37,16 +37,6 @@ const RotatPagesUsingAi = () => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const uploadInterval = setInterval(() => {
-        setUploadProgress(prev => {
-          if (prev >= 95) {
-            clearInterval(uploadInterval);
-            return 95;
-          }
-          return prev + Math.random() * 30;
-        });
-      }, 150);
-
       const response = await fetch('https://api.pdf.co/v1/file/upload', {
         method: 'POST',
         headers: { 'x-api-key': API_KEY },
@@ -54,13 +44,12 @@ const RotatPagesUsingAi = () => {
       });
 
       const data = await response.json();
-      clearInterval(uploadInterval);
       setUploadProgress(100);
 
       if (data.error === false) {
         setUploadedFileUrl(data.url);
-        // ✅ start rotation automatically
-        rotatePdf(data.url);
+        // ✅ start compression automatically
+        compressPdf(data.url);
       } else {
         setState('select');
         setUploadProgress(0);
@@ -74,21 +63,71 @@ const RotatPagesUsingAi = () => {
     }
   };
 
-  const rotatePdf = async (fileUrl: string) => {
+  const compressPdf = async (fileUrl: string) => {
     setState('converting');
     try {
-      const response = await fetch('https://api.pdf.co/v1/pdf/edit/rotate/auto', {
+      const payload = {
+        url: fileUrl,
+        async: false,
+        config: {
+          images: {
+            color: {
+              skip: false,
+              downsample: {
+                skip: false,
+                downsample_ppi: 150,
+                threshold_ppi: 225
+              },
+              compression: {
+                skip: false,
+                compression_format: "jpeg",
+                compression_params: {
+                  quality: 60
+                }
+              }
+            },
+            grayscale: {
+              skip: false,
+              downsample: {
+                skip: false,
+                downsample_ppi: 150,
+                threshold_ppi: 225
+              },
+              compression: {
+                skip: false,
+                compression_format: "jpeg",
+                compression_params: {
+                  quality: 60
+                }
+              }
+            },
+            monochrome: {
+              skip: false,
+              downsample: {
+                skip: false,
+                downsample_ppi: 300,
+                threshold_ppi: 450
+              },
+              compression: {
+                skip: false,
+                compression_format: "ccitt_g4",
+                compression_params: {}
+              }
+            }
+          },
+          save: {
+            garbage: 4
+          }
+        }
+      };
+
+      const response = await fetch('https://api.pdf.co/v2/pdf/compress', {
         method: 'POST',
         headers: {
           'x-api-key': API_KEY,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          url: fileUrl,
-          lang: "eng",
-          name: "result.pdf",
-          async: false
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -96,13 +135,13 @@ const RotatPagesUsingAi = () => {
         setConvertedFileUrls([data.url]);
         setState('ready');
       } else {
-        console.error('Auto rotation failed:', data);
-        alert(`Auto rotation failed: ${data.message || 'Please try again.'}`);
+        console.error('Compression failed:', data);
+        alert(`Compression failed: ${data.message || 'Please try again.'}`);
         setState('select');
       }
     } catch (error) {
-      console.error('Rotate error:', error);
-      alert('Auto rotation failed. Please try again.');
+      console.error('Compress error:', error);
+      alert('Compression failed. Please try again.');
       setState('select');
     }
   };
@@ -142,25 +181,29 @@ const RotatPagesUsingAi = () => {
         <h1 className="text-sm text-black font-medium text-center">
           Every tool you need to work with PDFs in one place
         </h1>
+  
       </div>
 
       <div className='pb-10 flex flex-col justify-center items-center'>
         <div className="h-[4rem] flex justify-center items-center px-4">
           <div className="flex flex-wrap justify-center py-1 items-center mx-auto text-neutral-600 text-2xl sm:text-3xl md:text-4xl lg:text-5xl gap-2">
-            Rotate To
+            Compress To
             <div className="w-[120px] sm:w-[150px] md:w-[180px] text-left">
               <FlipWords words={words} />
             </div>
           </div>
         </div>
-        <p className="text-muted-foreground text-lg">AI Auto Rotate pages of your PDF</p>
+        <p className="text-muted-foreground text-lg">Compress your PDF</p>
         <p className="text-[#a855f7] text-sm mt-2 font-medium">
-          Automatically fixes page rotation using text analysis (default lang: ENG).
+          Automatically reduces PDF size using smart compression.
         </p>
       </div>
 
       <Card className="h-fit p-8 shadow-elegant border-0 backdrop-blur-sm">
         <div className="text-center space-y-1 ">
+        <div>
+
+        </div>
           <div className="space-y-6">
             {state === 'select' && !uploadedFileUrl && (
               <div
@@ -177,13 +220,14 @@ const RotatPagesUsingAi = () => {
                   className="hidden"
                 />
               </div>
+              
             )}
 
             {state === 'uploading' && (
-              <div className="space-y-4">
-                <Progress value={uploadProgress} className="h-4" />
+              <div className="flex flex-col items-center space-y-4">
+                <Spinner />
                 <p className="text-sm text-muted-foreground mt-2 text-center">
-                  {Math.round(uploadProgress)}% uploaded
+                  Uploading PDF...
                 </p>
               </div>
             )}
@@ -191,7 +235,7 @@ const RotatPagesUsingAi = () => {
             {state === 'converting' && (
               <div className="flex flex-col items-center space-y-4">
                 <Spinner />
-                <p className="text-muted-foreground">Auto rotating pages in PDF...</p>
+                <p className="text-muted-foreground">Compressing PDF...</p>
               </div>
             )}
 
@@ -201,7 +245,7 @@ const RotatPagesUsingAi = () => {
                   <div key={index} className="flex items-center space-x-2">
                     {/* Download Button */}
                     <Button
-                      onClick={() => downloadFile(url, "auto-rotated.pdf", index)}
+                      onClick={() => downloadFile(url, "compressed.pdf", index)}
                       disabled={downloadingIndex === index}
                       className="flex-1 bg-[#f16625] shadow-xl hover:scale-105 transition-all text-lg px-8 py-4 h-auto text-white rounded-xl"
                     >
@@ -213,7 +257,7 @@ const RotatPagesUsingAi = () => {
                       ) : (
                         <>
                           <Download className="w-5 h-5 mr-2" />
-                          Download Rotated PDF
+                          Download Compressed PDF
                         </>
                       )}
                     </Button>
@@ -231,15 +275,16 @@ const RotatPagesUsingAi = () => {
                 ))}
 
                 <Button onClick={resetConverter} variant="outline" className="mt-4">
-                  Rotate Another PDF
+                  Compress Another PDF
                 </Button>
               </div>
             )}
           </div>
         </div>
       </Card>
+
     </div>
   );
 };
 
-export default RotatPagesUsingAi;
+export default CompressPdf;
