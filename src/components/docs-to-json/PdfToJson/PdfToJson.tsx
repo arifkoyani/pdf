@@ -11,8 +11,8 @@ const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYr
 
 type AppState = 'select' | 'uploading' | 'converting' | 'ready';
 
-const RotatePagesUsingAi = () => {
-  const words = ["Better", "Pdf", "Perfect", "Pages"];
+const PdfToJson = () => {
+  const words = ["Better", "JSON", "Perfect", "Data"];
   const [state, setState] = useState<AppState>('select');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFileUrl, setUploadedFileUrl] = useState('');
@@ -59,8 +59,8 @@ const RotatePagesUsingAi = () => {
 
       if (data.error === false) {
         setUploadedFileUrl(data.url);
-        // ✅ start rotation automatically
-        rotatePdf(data.url);
+        // ✅ start conversion automatically
+        convertPdfToJson(data.url);
       } else {
         setState('select');
         setUploadProgress(0);
@@ -74,10 +74,10 @@ const RotatePagesUsingAi = () => {
     }
   };
 
-  const rotatePdf = async (fileUrl: string) => {
+  const convertPdfToJson = async (fileUrl: string) => {
     setState('converting');
     try {
-      const response = await fetch('https://api.pdf.co/v1/pdf/edit/rotate/auto', {
+      const response = await fetch('https://api.pdf.co/v1/pdf/convert/to/json2', {
         method: 'POST',
         headers: {
           'x-api-key': API_KEY,
@@ -85,24 +85,22 @@ const RotatePagesUsingAi = () => {
         },
         body: JSON.stringify({
           url: fileUrl,
-          lang: "eng",
-          name: "result.pdf",
+          name: "result.json",
           async: false
         }),
       });
-
       const data = await response.json();
       if (data.error === false && data.url) {
         setConvertedFileUrls([data.url]);
         setState('ready');
       } else {
-        console.error('Auto rotation failed:', data);
-        alert(`Auto rotation failed: ${data.message || 'Please try again.'}`);
+        console.error('PDF to JSON conversion failed:', data);
+        alert(`PDF to JSON conversion failed: ${data.message || 'Please try again.'}`);
         setState('select');
       }
     } catch (error) {
-      console.error('Rotate error:', error);
-      alert('Auto rotation failed. Please try again.');
+      console.error('Convert error:', error);
+      alert('PDF to JSON conversion failed. Please try again.');
       setState('select');
     }
   };
@@ -136,6 +134,9 @@ const RotatePagesUsingAi = () => {
     }
   };
 
+  {console.log("url",URL)}
+
+
   return (
     <div className="min-h-[calc(100vh-65px)] bg-[#fff9f6] flex flex-col items-center justify-start">
       <div className="w-full bg-gradient-to-r from-[#FEEDE5] to-[#FFFFFF] shadow-xl px-4 py-5 mb-5">
@@ -147,15 +148,15 @@ const RotatePagesUsingAi = () => {
       <div className='pb-10 flex flex-col justify-center items-center'>
         <div className="h-[4rem] flex justify-center items-center px-4">
           <div className="flex flex-wrap justify-center py-1 items-center mx-auto text-neutral-600 text-2xl sm:text-3xl md:text-4xl lg:text-5xl gap-2">
-            Rotate To
+            Convert To
             <div className="w-[120px] sm:w-[150px] md:w-[180px] text-left">
               <FlipWords words={words} />
             </div>
           </div>
         </div>
-        <p className="text-muted-foreground text-lg">AI Auto Rotate pages of your PDF</p>
+        <p className="text-muted-foreground text-lg">PDF to JSON Converter</p>
         <p className="text-[#a855f7] text-sm mt-2 font-medium">
-          Automatically fixes page rotation using text analysis (default lang: ENG).
+          Convert PDF into JSON format with structured data extraction.
         </p>
       </div>
 
@@ -163,6 +164,7 @@ const RotatePagesUsingAi = () => {
         <div className="text-center space-y-1 ">
           <div className="space-y-6">
             {state === 'select' && !uploadedFileUrl && (
+                
               <div
                 className="border-4 flex items-center justify-center space-x-6 p-4 px-32 border-[#ff7525] shadow-lg rounded-xl cursor-pointer bg-[#f16625] hover:shadow-[#f16625]"
                 onClick={() => fileInputRef.current?.click()}
@@ -191,7 +193,7 @@ const RotatePagesUsingAi = () => {
             {state === 'converting' && (
               <div className="flex flex-col items-center space-y-4">
                 <Spinner />
-                <p className="text-muted-foreground">Auto rotating pages in PDF...</p>
+                <p className="text-muted-foreground">Converting PDF to JSON...</p>
               </div>
             )}
 
@@ -201,7 +203,7 @@ const RotatePagesUsingAi = () => {
                   <div key={index} className="flex items-center space-x-2">
                     {/* Download Button */}
                     <Button
-                      onClick={() => downloadFile(url, "auto-rotated.pdf", index)}
+                      onClick={() => downloadFile(url, "converted.json", index)}
                       disabled={downloadingIndex === index}
                       className="flex-1 bg-[#f16625] shadow-xl hover:scale-105 transition-all text-lg px-8 py-4 h-auto text-white rounded-xl"
                     >
@@ -213,7 +215,7 @@ const RotatePagesUsingAi = () => {
                       ) : (
                         <>
                           <Download className="w-5 h-5 mr-2" />
-                          Download Rotated PDF
+                          Download JSON File
                         </>
                       )}
                     </Button>
@@ -231,7 +233,7 @@ const RotatePagesUsingAi = () => {
                 ))}
 
                 <Button onClick={resetConverter} variant="outline" className="mt-4">
-                  Rotate Another PDF
+                  Convert Another PDF
                 </Button>
               </div>
             )}
@@ -242,4 +244,4 @@ const RotatePagesUsingAi = () => {
   );
 };
 
-export default RotatePagesUsingAi;
+export default PdfToJson;

@@ -3,14 +3,14 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, Download, Loader2 } from 'lucide-react';
-import { FlipWords } from "../../ui/flip-words/flip-words";
+import { FlipWords } from "../ui/flip-words/flip-words";
 
 const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYrvplQOGWMHHNdHRzLne0IyPsDJ";
 
 type AppState = 'select' | 'uploading' | 'converting' | 'ready';
 
-const PdfToJsonConverter = () => {
-  const words = ["Better", "Fast", "Perfect", "Json"];
+const PdfToJsonByAi = () => {
+  const words = ["Better", "By Ai", "Perfect", "Json"];
   const [state, setState] = useState<AppState>('select');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFileUrl, setUploadedFileUrl] = useState('');
@@ -74,7 +74,7 @@ const PdfToJsonConverter = () => {
     setState('converting');
 
     try {
-      const response = await fetch('https://api.pdf.co/v1/pdf/convert/to/json2', {
+      const response = await fetch('https://api.pdf.co/v1/pdf/convert/to/json-meta', {
         method: 'POST',
         headers: {
           'x-api-key': API_KEY,
@@ -137,7 +137,7 @@ const PdfToJsonConverter = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-84px)] bg-gradient-subtle flex items-center justify-center px-6">
+    <div className="min-h-[calc(100vh-84px)] bg-gradient-subtle flex flex-col items-center justify-center px-6">
       <Card className="w-full  max-w-2xl p-8 shadow-elegant border-0 bg-white/80 backdrop-blur-sm">
         <div className="text-center space-y-1">
           {/* Header */}
@@ -152,7 +152,7 @@ const PdfToJsonConverter = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-muted-foreground text-lg">Convert your PDF files to high-quality JSON Formats</p>
+              <p className="text-muted-foreground text-lg">Convert your PDF files to high-quality JSON Formats using AI</p>
             </div>
           
           </div>
@@ -223,8 +223,38 @@ const PdfToJsonConverter = () => {
           </div>
         </div>
       </Card>
+
+     <span>
+     <div className="flex flex-col items-center justify-center h-full w-full">
+  <h2 className="text-2xl font-semibold mt-8 mb-4 text-center">
+    Convert PDF to JSON Simple vs Convert PDF to JSON by AI
+  </h2>
+
+  <p className="text-muted-foreground text-lg text-center max-w-2xl mb-6">
+    When you <strong>convert PDF to JSON simple</strong>, the tool extracts plain text and structure only. 
+    But when you <strong>convert PDF to JSON by AI</strong>, it intelligently detects tables, forms, and data fields, 
+    giving you a much cleaner and more accurate JSON output. This is important because AI-based conversion targets 
+    long-tail searches like “PDF to JSON by AI”, which have less competition and higher ranking chances. 
+    It also highlights modern, advanced features that build trust with users and improve SEO visibility.
+  </p>
+
+  {/* FAQ Section */}
+  <div className="w-full py-6 px-4 rounded-2xl" style={{ backgroundColor: "#fef0e9" }}>
+    <h3 className="text-xl font-bold text-center mb-3">
+      Why PDF to JSON by AI?
+    </h3>
+    <p className="text-lg text-center max-w-2xl mx-auto text-neutral-700">
+      AI-powered PDF to JSON conversion is smarter because it doesn’t just copy text. 
+      It understands tables, forms, and complex layouts, producing structured JSON that is 
+      more useful for developers, automation, and data analysis.
+    </p>
+  </div>
+</div>
+
+     </span>
+
     </div>
   );
 };
 
-export default PdfToJsonConverter;
+export default PdfToJsonByAi;

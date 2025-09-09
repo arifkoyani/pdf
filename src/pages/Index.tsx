@@ -5,6 +5,8 @@ import RotatPagesUsingAi from "@/components/rotate-selected-pages/RotatePageeUsi
 import Spinner from "@/components/ui/loader/loader";
 import AIInvoiceParser from "@/components/aI-Invoice-parser/AIInvoiceParser"
 import { useState } from "react";
+import PdfToJsonConverter from "@/components/docs-to-json/PdfToJson/PdfToJson";
+import PdfToJson from "@/components/docs-to-json/PdfToJson/PdfToJson";
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
 
@@ -60,6 +62,9 @@ const [isOpen, setIsOpen] = useState(false);
       )}
 
     </nav>
+
+<PdfToJson/>
+
   </>
   )
 };
@@ -67,6 +72,7 @@ const [isOpen, setIsOpen] = useState(false);
 
 
 export default Index;
+
 
 {/* <AIInvoiceParser/> */}
 
@@ -76,7 +82,7 @@ export default Index;
 
 {/* <CompressPdf/> */}
 
-{/* <RotatPagesUsingAi/> */}
+{/* <RotatePagesUsingAi/> */}
 
 {/* <RotatPagesUsingAi/> */}
 

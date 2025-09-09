@@ -26,7 +26,7 @@ const SendPdfEmail: React.FC<SendEmailProps> = ({ toEmail, fileUrl }) => {
       url: fileUrl,
       from: `WhatPDF <${SMTP_USERNAME}>`,
       to: toEmail,
-      subject: "Download Your Password-Protected PDF from WhatPDF",
+      subject: "Download Your Converted File from WhatPDF",
       bodytext: `Hello,
     
     Your PDF has been securely protected with a password using WhatPDF.com.
@@ -37,7 +37,7 @@ const SendPdfEmail: React.FC<SendEmailProps> = ({ toEmail, fileUrl }) => {
     Thank you,
     The WhatPDF Team`,
       bodyHtml: `
-        <p>Hello,</p>
+        <p className="bg-black">Hello,</p>
         <p>Your PDF has been securely converted and processed using <strong>WhatPDF.com</strong>.</p>
         <p>You can download your  PDF from the link below:</p>
         <p><a href="${fileUrl}" target="_blank">Download PDF</a></p>
