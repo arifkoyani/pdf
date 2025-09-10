@@ -7,6 +7,9 @@ import AIInvoiceParser from "@/components/aI-Invoice-parser/AIInvoiceParser"
 import { useState } from "react";
 import PdfToJsonConverter from "@/components/docs-to-json/PdfToJson/PdfToJson";
 import PdfToJson from "@/components/docs-to-json/PdfToJson/PdfToJson";
+import JpgToJson from "@/components/docs-to-json/JpgToJson/JpgToJson";
+import PngToJson from "@/components/docs-to-json/Png-To-Json/PngToJson";
+import QrCodeScanner from "@/components/qr-Code-Scanner/qrCodeScanner";
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
 
@@ -63,8 +66,6 @@ const [isOpen, setIsOpen] = useState(false);
 
     </nav>
 
-<PdfToJson/>
-
   </>
   )
 };
@@ -73,6 +74,38 @@ const [isOpen, setIsOpen] = useState(false);
 
 export default Index;
 
+
+// Extract Data from Email File
+// Extract Email Attachment
+// Extract Attachment from pdf
+// Make Text Searchable
+// Make Text Unsearchable
+// PDF Find Text
+// Find Text in Table with AI
+// Merge
+// PDF Split
+// Excel Conversion
+// Convert HTML into PDF.
+// Convert CSV, XLS, XLSX files into PDF.
+
+
+
+
+
+
+
+
+
+
+{/* <QrCodeScanner/> */}
+
+{/* <JpgToJson/> */}
+
+{/* <PngToJson/> */}
+
+{/* <JpgToJson/> */}
+
+{/* <PdfToJson/> */}
 
 {/* <AIInvoiceParser/> */}
 
