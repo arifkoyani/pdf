@@ -1,15 +1,13 @@
-import AddPasswordToPdf from "@/components/pdf-add-remove-password/Add-password-to-pdf/AddPasswordToPdf";
-import RemovePasswordFromPdf from "@/components/pdf-add-remove-password/Remove-Password-from-PDF/RemovePasswordFromPdf";
-import CompressPdf from "@/components/pdf-compressor/PdfCompress";
-import RotatPagesUsingAi from "@/components/rotate-selected-pages/RotatePageeUsingAi";
-import Spinner from "@/components/ui/loader/loader";
-import AIInvoiceParser from "@/components/aI-Invoice-parser/AIInvoiceParser"
 import { useState } from "react";
-import PdfToJsonConverter from "@/components/docs-to-json/PdfToJson/PdfToJson";
-import PdfToJson from "@/components/docs-to-json/PdfToJson/PdfToJson";
-import JpgToJson from "@/components/docs-to-json/JpgToJson/JpgToJson";
-import PngToJson from "@/components/docs-to-json/Png-To-Json/PngToJson";
-import QrCodeScanner from "@/components/qr-Code-Scanner/qrCodeScanner";
+import MergeAnyToPdf from "../components/merging-to-pdfs/merge-any-to-pdf/MergeAnyToPdf"
+import DocxToPdf from "@/components/merging-to-pdfs/docs-to-pdf/DocxToPdf";
+import JpgsToPdf from "@/components/merging-to-pdfs/Jpg-to-pdf/JpgsToPdf";
+import PngsToPdf from "@/components/merging-to-pdfs/pngs-to-pdf/PngsToPdf";
+import RtfsToPdf from "@/components/merging-to-pdfs/rtfs-to-pdf/RtfsToPdf";
+import TxtsToPdf from "@/components/merging-to-pdfs/txts-to-pdf/TxtsToPdf";
+import XlsxToPdf from "@/components/merging-to-pdfs/xlsxs-to-pdf/XlsxsToPdf";
+import XlsxsToPdf from "@/components/merging-to-pdfs/xlsxs-to-pdf/XlsxsToPdf";
+import ZipToPdf from "@/components/merging-to-pdfs/zips-to-pdf/ZipToPDF";
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
 
@@ -65,7 +63,7 @@ const [isOpen, setIsOpen] = useState(false);
       )}
 
     </nav>
-
+    <ZipToPdf/>
   </>
   )
 };
@@ -82,7 +80,6 @@ export default Index;
 // Make Text Unsearchable
 // PDF Find Text
 // Find Text in Table with AI
-// Merge
 // PDF Split
 // Excel Conversion
 // Convert HTML into PDF.
@@ -90,14 +87,31 @@ export default Index;
 
 
 
+{/* <XlsxsToPdf/> */}
+
+{/* <TxtsToPdf/> */}
+
+{/* <RtfsToPdf/> */}
+
+{/* <PngsToPdf/> */}
+
+{/* <JpgsToPdf/> */}
+
+{/* <DocxToPdf/> */}
+
+{/* <MergeAnyToPdf/> */}
+
+{/* <PdfsToPdf/> */}
 
 
 
 
 
 
+{/* <AIInvoiceParser/> */}
 
 {/* <QrCodeScanner/> */}
+{/* <JpgToJson/> */}
 
 {/* <JpgToJson/> */}
 

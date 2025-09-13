@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYrvplQOGWMHHNdHRzLne0IyPsDJ";
+const API_KEY = "arifhussainkoyan5@gmail.com_1oplhALdIhZQG31zqSWJKwXdixugSvGZP5JRDMnqMBaDUXS7rZCpsAMJQ7yYtrHn";
 const SMTP_USERNAME = "arifkoyani@gmail.com";
 const SMTP_PASSWORD = "anpttursrfdgoskv"; // Gmail App Password
 
@@ -38,9 +38,9 @@ const SendPdfEmail: React.FC<SendEmailProps> = ({ toEmail, fileUrl }) => {
     The WhatPDF Team`,
       bodyHtml: `
         <p className="bg-black">Hello,</p>
-        <p>Your PDF has been securely converted and processed using <strong>WhatPDF.com</strong>.</p>
+        <p>Your PDF has been securely converted and processed using <strong><a href="www.whatpdf.com" target="_blank">Download PDF</a></strong>.</p>
         <p>You can download your  PDF from the link below:</p>
-        <p><a href="${fileUrl}" target="_blank">Download PDF</a></p>
+        <p>Download PDF</a></p>
         <p>Keep your pdf safe to access the file.</p>
         <p>Thank you,<br />The WhatPDF Team</p>
       `,
