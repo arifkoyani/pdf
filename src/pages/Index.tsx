@@ -3,6 +3,8 @@ import SplitPdf from "@/components/split-pdf/splitPdf";
 import SplitPdfByText from "@/components/split-pdf/split-pdf-by-text/SplitPdfByText";
 import SearchablePdf from "@/components/make-text-searchable/Searchable";
 import NotSearchablePdf from "@/components/make-text-searchable/NotSearchable";
+import EmailToPdf from "@/components/email-to-pdf/EmailToPdf";
+import HtmlToPdf from "@/components/html-to-pdf/HtmlToPdf";
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
 
@@ -76,6 +78,10 @@ export default Index;
 // Convert CSV, XLS, XLSX files into PDF.
 
 
+
+{/* <HtmlToPdf/> */}
+
+{/* <EmailToPdf/> */}
 
 {/* <NotSearchablePdf/> */}
 
