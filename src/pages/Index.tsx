@@ -1,13 +1,8 @@
 import { useState } from "react";
-import MergeAnyToPdf from "../components/merging-to-pdfs/merge-any-to-pdf/MergeAnyToPdf"
-import DocxToPdf from "@/components/merging-to-pdfs/docs-to-pdf/DocxToPdf";
-import JpgsToPdf from "@/components/merging-to-pdfs/Jpg-to-pdf/JpgsToPdf";
-import PngsToPdf from "@/components/merging-to-pdfs/pngs-to-pdf/PngsToPdf";
-import RtfsToPdf from "@/components/merging-to-pdfs/rtfs-to-pdf/RtfsToPdf";
-import TxtsToPdf from "@/components/merging-to-pdfs/txts-to-pdf/TxtsToPdf";
-import XlsxToPdf from "@/components/merging-to-pdfs/xlsxs-to-pdf/XlsxsToPdf";
-import XlsxsToPdf from "@/components/merging-to-pdfs/xlsxs-to-pdf/XlsxsToPdf";
-import ZipToPdf from "@/components/merging-to-pdfs/zips-to-pdf/ZipToPDF";
+import SplitPdf from "@/components/split-pdf/splitPdf";
+import SplitPdfByText from "@/components/split-pdf/split-pdf-by-text/SplitPdfByText";
+import SearchablePdf from "@/components/make-text-searchable/Searchable";
+import NotSearchablePdf from "@/components/make-text-searchable/NotSearchable";
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
 
@@ -61,9 +56,7 @@ const [isOpen, setIsOpen] = useState(false);
           </a>
         </div>
       )}
-
     </nav>
-    <ZipToPdf/>
   </>
   )
 };
@@ -76,16 +69,23 @@ export default Index;
 // Extract Data from Email File
 // Extract Email Attachment
 // Extract Attachment from pdf
-// Make Text Searchable
-// Make Text Unsearchable
 // PDF Find Text
 // Find Text in Table with AI
-// PDF Split
 // Excel Conversion
 // Convert HTML into PDF.
 // Convert CSV, XLS, XLSX files into PDF.
 
 
+
+{/* <NotSearchablePdf/> */}
+
+{/* <SearchablePdf/> */}
+
+{/* <SplitPdfByText/> */}
+
+{/* <SplitPdf/> */}
+
+{/* <ZipToPdf/> */}
 
 {/* <XlsxsToPdf/> */}
 
