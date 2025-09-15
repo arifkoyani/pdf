@@ -1,10 +1,8 @@
 import { useState } from "react";
-import SplitPdf from "@/components/split-pdf/splitPdf";
-import SplitPdfByText from "@/components/split-pdf/split-pdf-by-text/SplitPdfByText";
-import SearchablePdf from "@/components/make-text-searchable/Searchable";
-import NotSearchablePdf from "@/components/make-text-searchable/NotSearchable";
-import EmailToPdf from "@/components/email-to-pdf/EmailToPdf";
-import HtmlToPdf from "@/components/html-to-pdf/HtmlToPdf";
+import AccountBalance from "@/components/account-balance/AccountBalance";
+import ExcelToXml from "@/components/excel-conversions/excel-to-xml/ExcelToXml";
+import ExcelToPdf from "@/components/excel-conversions/excel-to-pdf/ExceToPdf";
+
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
 
@@ -59,25 +57,40 @@ const [isOpen, setIsOpen] = useState(false);
         </div>
       )}
     </nav>
+<AccountBalance/>
+
+
   </>
   )
 };
 
-
-
 export default Index;
 
 
-// Extract Data from Email File
-// Extract Email Attachment
-// Extract Attachment from pdf
-// PDF Find Text
-// Find Text in Table with AI
-// Excel Conversion
-// Convert HTML into PDF.
-// Convert CSV, XLS, XLSX files into PDF.
 
+{/* <ExcelToPdf/> */}
 
+{/* <ExcelToPdf/> */}
+
+{/* <ExcelToXml/> */}
+
+{/* <CsvToJson/> */}
+
+{/* <ExcelToJson/> */}
+
+{/* <CsvToHtml/> */}
+
+{/* <ExcelToHtml/> */}
+
+{/* <ExcelToCsv/> */}
+
+{/* <AccountBalance/> */}
+
+{/* <ExtractAttachmentsFromPdf/> */}
+
+{/* <ExtractEmailAttachments/> */}
+
+{/* <ExtractDataFromEmail/> */}
 
 {/* <HtmlToPdf/> */}
 

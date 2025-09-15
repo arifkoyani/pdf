@@ -1,33 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Download, Loader2, Copy } from "lucide-react";
+import { Download, Loader2, Copy, Upload } from "lucide-react";
 import { FlipWords } from "@/components/ui/flip-words/flip-words";
 import Spinner from "@/components/ui/loader/loader";
-import SendPdfEmail from "@/components/send-email/SendEmail";
 
-const API_KEY =
-  "arifhussainkoyan5@gmail.com_1oplhALdIhZQG31zqSWJKwXdixugSvGZP5JRDMnqMBaDUXS7rZCpsAMJQ7yYtrHn";
+const API_KEY = "arifhussainkoyan5@gmail.com_1oplhALdIhZQG31zqSWJKwXdixugSvGZP5JRDMnqMBaDUXS7rZCpsAMJQ7yYtrHn";
 
 type AppState = "select" | "uploading" | "converting" | "ready";
 
-const HtmlToPdf = () => {
-  const words = ["Better", "Fast", "Perfect", "Email"];
+const ExcelToCsv = () => {
+  const words = ["Excel", "Spreadsheet", "Data", "Conversion"];
   const [state, setState] = useState<AppState>("select");
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [isDownloading, setIsDownloading] = useState(false);
   const [convertedFileUrl, setConvertedFileUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  // copy system
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const [downloadingIndex, setDownloadingIndex] = useState<number | null>(null);
-
-  // send email system
-  const [toEmail, setToEmail] = useState("");
 
   // Create a hidden file input ref
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -38,12 +29,11 @@ const HtmlToPdf = () => {
     }
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
       setSelectedFile(file);
-      // Start the conversion process automatically
-      await convertEmailToPdf(file);
+      convertExcelToCsv(file);
     }
   };
 
@@ -78,8 +68,8 @@ const HtmlToPdf = () => {
     }
   };
 
-  // Convert email to PDF
-  const convertEmailToPdf = async (file: File) => {
+  // Convert Excel to CSV
+  const convertExcelToCsv = async (file: File) => {
     setState("uploading");
     const fileUrl = await uploadFile(file);
     if (!fileUrl) {
@@ -89,7 +79,7 @@ const HtmlToPdf = () => {
     setState("converting");
 
     try {
-      const response = await fetch("https://api.pdf.co/v1/pdf/convert/from/email", {
+      const response = await fetch("https://api.pdf.co/v1/xls/convert/to/csv", {
         method: "POST",
         headers: {
           "x-api-key": API_KEY,
@@ -97,11 +87,8 @@ const HtmlToPdf = () => {
         },
         body: JSON.stringify({
           url: fileUrl,
-          embedAttachments: true,
-          convertAttachments: true,
-          paperSize: "Letter",
-          name: "email-with-attachments",
           async: false,
+          name: "converted-file"
         }),
       });
 
@@ -121,7 +108,6 @@ const HtmlToPdf = () => {
 
   // Download system
   const downloadFile = async (url: string, fileName: string, index: number) => {
-    setDownloadingIndex(index);
     setIsDownloading(true);
     setDownloadProgress(0);
 
@@ -146,7 +132,7 @@ const HtmlToPdf = () => {
       const objectUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = objectUrl;
-      link.download = fileName;
+      link.download = fileName || "converted-file.csv";
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -155,13 +141,11 @@ const HtmlToPdf = () => {
       setTimeout(() => {
         setIsDownloading(false);
         setDownloadProgress(0);
-        setDownloadingIndex(null);
       }, 1000);
     } catch {
       alert("Download failed. Please try again.");
       setIsDownloading(false);
       setDownloadProgress(0);
-      setDownloadingIndex(null);
     }
   };
 
@@ -169,7 +153,6 @@ const HtmlToPdf = () => {
     setState("select");
     setConvertedFileUrl(null);
     setSelectedFile(null);
-    setToEmail("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -179,41 +162,50 @@ const HtmlToPdf = () => {
     <div className="min-h-[calc(100vh-65px)] bg-[#fff9f6] flex flex-col items-center justify-start">
       <div className="w-full bg-gradient-to-r from-[#FEEDE5] to-[#FFFFFF] shadow-xl px-4 py-5 mb-5">
         <h1 className="text-sm text-black font-medium text-center">
-        Convert email files (.msg or .eml) code into PDF. Extract attachments (if any) from input email and embeds into PDF as PDF attachments.
+          Convert Excel to CSV
         </h1>
       </div>
 
       <div className="pb-10">
         <div className="h-[4rem] flex justify-center items-center px-4">
           <div className="flex flex-wrap justify-center items-center mx-auto text-neutral-600 text-2xl sm:text-3xl md:text-4xl lg:text-5xl gap-2">
-            Convert To
-            <div className="w-[120px] sm:w-[150px] md:w-[180px] text-left">
+            Convert
+            <div className="w-[180px] sm:w-[220px] md:w-[260px] text-left">
               <FlipWords words={words} />
             </div>
           </div>
         </div>
         <p className="text-muted-foreground text-lg">
-          Upload your email file and get it as a PDF
+          Upload your Excel xls/xlsx file  and convert it to CSV format
         </p>
       </div>
 
-      <Card className="h-fit px-32 py-2 border-0 bg-transparent">
+      <Card className="h-fit px-8 md:px-32 py-8 border-0 bg-transparent w-full max-w-4xl">
         <div className="text-center space-y-6">
           {state === "select" && (
             <div className="space-y-4">
               <input
                 type="file"
                 ref={fileInputRef}
-                accept=".eml,.msg"
+                accept=".xls,.xlsx,.xlsm"
                 onChange={handleFileChange}
                 className="hidden"
               />
               <Button
                 onClick={handleFileSelect}
-                className="w-full bg-[#f16625] hover:bg-[#ff550d] text-white text-lg px-8 py-4 h-auto"
+                className="w-full max-w-md bg-[#f16625] hover:bg-[#ff550d] text-white text-lg px-8 py-4 h-auto"
               >
-                Select Email File
+                <Upload className="w-5 h-5 mr-2" />
+                Select Excel File
               </Button>
+              
+              {/* Information text */}
+              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm text-yellow-800">
+                  <strong>Note:</strong> During conversion you should not expect any Word macros 
+                  to operate as we do not support Office macros.
+                </p>
+              </div>
             </div>
           )}
 
@@ -221,23 +213,24 @@ const HtmlToPdf = () => {
             <div className="flex flex-col items-center space-y-4">
               <Spinner />
               <p className="text-muted-foreground">
-                {state === "uploading" ? "Uploading file..." : "Converting..."}
+                {state === "uploading" ? "Uploading file..." : "Converting to CSV..."}
               </p>
             </div>
           )}
 
           {state === "ready" && convertedFileUrl && (
             <div className="space-y-6">
-              <div className="flex flex-col space-y-4 mt-6">
+              <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
+                <h2 className="text-xl font-semibold text-green-600">Conversion Complete!</h2>
+                <p className="text-gray-600">Your Excel file has been successfully converted to CSV format.</p>
+                
                 <div className="flex items-center space-x-2">
                   <Button
-                    onClick={() =>
-                      downloadFile(convertedFileUrl, "converted-email.pdf", 0)
-                    }
-                    disabled={downloadingIndex === 0}
+                    onClick={() => downloadFile(convertedFileUrl, "converted-file.csv", 0)}
+                    disabled={isDownloading}
                     className="flex-1 bg-[#f16625] shadow-xl hover:scale-105 transition-all text-lg px-8 py-4 h-auto text-white rounded-xl"
                   >
-                    {downloadingIndex === 0 ? (
+                    {isDownloading ? (
                       <>
                         <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                         Downloading...
@@ -245,7 +238,7 @@ const HtmlToPdf = () => {
                     ) : (
                       <>
                         <Download className="w-5 h-5 mr-2" />
-                        Download PDF
+                        Download CSV
                       </>
                     )}
                   </Button>
@@ -254,7 +247,7 @@ const HtmlToPdf = () => {
                     variant="outline"
                     size="icon"
                     onClick={() => handleCopy(convertedFileUrl, 0)}
-                    title="Copy link"
+                    title="Copy download link"
                     className={
                       copiedIndex === 0 ? "bg-green-500 text-white" : ""
                     }
@@ -263,16 +256,14 @@ const HtmlToPdf = () => {
                   </Button>
                 </div>
 
-                <span className="flex gap-2">
-                  <input
-                    type="email"
-                    placeholder="Enter recipient email"
-                    value={toEmail}
-                    onChange={(e) => setToEmail(e.target.value)}
-                    className="border rounded-lg p-2 w-full"
-                  />
-                  <SendPdfEmail toEmail={toEmail} fileUrl={convertedFileUrl} />
-                </span>
+                {isDownloading && (
+                  <div className="space-y-2">
+                    <Progress value={downloadProgress} className="w-full" />
+                    <p className="text-sm text-gray-500">
+                      Downloading... {Math.round(downloadProgress)}%
+                    </p>
+                  </div>
+                )}
               </div>
 
               <Button
@@ -280,7 +271,7 @@ const HtmlToPdf = () => {
                 variant="outline"
                 className="mt-4"
               >
-                Convert Another Email
+                Convert Another File
               </Button>
             </div>
           )}
@@ -290,4 +281,16 @@ const HtmlToPdf = () => {
   );
 };
 
-export default HtmlToPdf;
+// Progress component (if not already imported)
+const Progress = ({ value, className }: { value: number; className?: string }) => {
+  return (
+    <div className={`w-full bg-gray-200 rounded-full h-2.5 ${className}`}>
+      <div
+        className="bg-[#f16625] h-2.5 rounded-full transition-all duration-300"
+        style={{ width: `${value}%` }}
+      ></div>
+    </div>
+  );
+};
+
+export default ExcelToCsv;
