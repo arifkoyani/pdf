@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Upload, Download, Loader2 } from 'lucide-react';
 import { FlipWords } from '@/components/ui/flip-words/flip-words';
 
-const API_KEY = "arifalikoyani@gmail.com_3pAjCTcGYalMXO6wTDoN5aQZpvlHpLgbl5bJSYrvplQOGWMHHNdHRzLne0IyPsDJ";
+const API_KEY = "arif@audeflow.com_0XUgOpxRN9iqfJFxxYUDWMnHpoP7177lWf7ESbdwV0bIvXQUQgnOwqI4aQGCev5m";
 
 type AppState = 'select' | 'uploading' | 'converting' | 'ready';
 
@@ -204,7 +204,7 @@ const PngToPdfConverter = () => {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".png,.jpg,.jpeg,.tiff,.tif"
+                  accept=".png"
                   onChange={handleFileSelect}
                   className="hidden"
                 />

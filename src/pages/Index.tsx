@@ -2,6 +2,8 @@ import { useState } from "react";
 import AccountBalance from "@/components/account-balance/AccountBalance";
 import ExcelToXml from "@/components/excel-conversions/excel-to-xml/ExcelToXml";
 import ExcelToPdf from "@/components/excel-conversions/excel-to-pdf/ExceToPdf";
+import PngToPdfConverter from "@/components/Image-to-pdf/png-to-pdf/PngToPdf";
+import BarcodeGenerator from "@/components/barcode/Barcode";
 
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +59,9 @@ const [isOpen, setIsOpen] = useState(false);
         </div>
       )}
     </nav>
-<AccountBalance/>
+{/* <AccountBalance/> */}
+<BarcodeGenerator/>
+
 
 
   </>
