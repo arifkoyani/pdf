@@ -70,6 +70,87 @@ const [isOpen, setIsOpen] = useState(false);
 
 export default Index;
 
+// GTIN14
+// DataMatrix
+// GTIN8
+// Aztec
+// /AustralianPostCode
+// Code128
+// Code39Mod43
+// Code39
+// Code39Mod43Extended
+// Code93
+// EAN13
+// EAN2
+// EAN5
+// EAN8
+// GS1 - 128
+// UPCA--->GTIN12
+// {
+//   "name": "MicroPDF.png",
+//   "value": "HELLO1234567890",
+//   "type": "MicroPDF417",
+//   "inline": false,
+//   "async": false
+// }
+
+// Interleaved2of5
+// {
+//   "name": "Interleaved2of5.png",
+//   "value": "12345678",
+//   "type": "I2of5",
+//   "inline": false,
+//   "async": false,
+//   "profiles": "{'NarrowBarWidth': 2}"
+// }
+
+// ITF14
+// MaxiCode
+// MICR
+// MSI
+// {
+//   "name": "MSI.png",
+//   "value": "1234567890",
+//   "type": "MSI",
+//   "inline": false,
+//   "async": false,
+//   "profiles": "{'NarrowBarWidth': 2}"
+// }
+
+// Pharmacode	
+// PZN
+// UPCE
+// GTIN13
+// IntelligentMail
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Codabar-------no
+// CodablockF------No
+// Code16K----No
+// Code39Extended
+// Code39Mod43Extended
+// DPMDataMatrix
+// GS1DataBarExpanded
+// GS1DataBarExpandedStacked
+// GS1DataBarStacked
+// GS1DataBarOmnidirectional
+// GS1DataBarLimited
+// PostNet
+// RoyalMail
+// RoyalMailKIX
+
 
 
 {/* <ExcelToPdf/> */}

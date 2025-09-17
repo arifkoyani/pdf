@@ -3,12 +3,15 @@
 import { useState } from "react"
 import { Download, X, ImageIcon } from "lucide-react"
 import { FlipWords } from "../ui/flip-words/flip-words"
+import { ColorPicker } from "../color-picker/colorpicker"
 
 export default function BarcodeGenerator() {
-    const words = ["Better", "Fast", "Perfect", "QRCODE"]
+  const words = ["Better", "Fast", "Perfect", "QRCODE"]
   const [value, setValue] = useState("")
   const [angle, setAngle] = useState("0")
   const [narrowBarWidth, setNarrowBarWidth] = useState(20) // Changed to number for slider
+  const [foreColor, setForeColor] = useState("#ff550d")
+  const [backColor, setBackColor] = useState("#ffffff")
   const [barcodeUrl, setBarcodeUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [file, setFile] = useState<File | null>(null)
@@ -81,7 +84,8 @@ export default function BarcodeGenerator() {
       }
 
       const apiNarrowBarWidth = mapSliderToApiValue(narrowBarWidth)
-      console.log("[v0] Slider value:", narrowBarWidth, "API value:", apiNarrowBarWidth)
+      console.log(" Slider value:", narrowBarWidth, "API value:", apiNarrowBarWidth)
+      console.log("this is value", value)
 
       const response = await fetch("https://api.pdf.co/v1/barcode/generate", {
         method: "POST",
@@ -98,7 +102,9 @@ export default function BarcodeGenerator() {
           decorationImage: uploadedUrl || undefined,
           profiles: JSON.stringify({
             Angle: Number(angle),
-            NarrowBarWidth: apiNarrowBarWidth,
+            NarrowBarWidth: 30,
+            ForeColor: foreColor,
+            BackColor: backColor,
           }),
         }),
       })
@@ -136,12 +142,12 @@ export default function BarcodeGenerator() {
   return (
     <div className="p-8 max-w-2xl mx-auto bg-white shadow-2xl rounded-3xl space-y-6 border border-gray-100">
       <div className="text-center space-y-2">
-      <div className="flex flex-wrap justify-center items-center mx-auto text-neutral-600 text-2xl sm:text-3xl md:text-4xl lg:text-5xl gap-2">
-            Generating To
-            <div className="w-[120px] sm:w-[150px] md:w-[180px] text-left">
-              <FlipWords words={words} />
-            </div>
+        <div className="flex flex-wrap justify-center items-center mx-auto text-neutral-600 text-2xl sm:text-3xl md:text-4xl lg:text-5xl gap-2">
+          Generating To
+          <div className="w-[120px] sm:w-[150px] md:w-[180px] text-left">
+            <FlipWords words={words} />
           </div>
+        </div>
         <p className="text-gray-600">Create custom QR codes with logo images</p>
       </div>
 
@@ -158,6 +164,12 @@ export default function BarcodeGenerator() {
             rows={3}
             className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors resize-none"
           />
+        </div>
+
+        {/* Color Picker */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <ColorPicker initialColor={foreColor} onChange={setForeColor} label="Foreground Color (QR Code)" />
+          <ColorPicker initialColor={backColor} onChange={setBackColor} label="Background Color" />
         </div>
 
         {/* Size Slider */}
@@ -286,7 +298,7 @@ export default function BarcodeGenerator() {
         )}
       </div>
 
-      <style >{`
+      <style>{`
         .slider::-webkit-slider-thumb {
           appearance: none;
           height: 20px;
