@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Download, X, ImageIcon, PaintBucket, Link, MessageSquare, Mail, Phone, Wifi, Eye, EyeOff, MessageCircle, Youtube, Facebook, Twitter } from "lucide-react"
+import { Download, X, ImageIcon, PaintBucket, Link, MessageSquare, Mail, Phone, Wifi, Eye, EyeOff, MessageCircle, Youtube, Facebook, X as XIcon } from "lucide-react"
 import { FlipWords } from "../ui/flip-words/flip-words"
 import { ColorPicker } from "../color-picker/colorpicker"
 import SendPdfEmail from "../send-email/SendEmail"
@@ -25,7 +25,7 @@ export default function BarcodeGenerator() {
   const [toEmail, setToEmail] = useState("") // Email state for sending
   const [selectedFrame, setSelectedFrame] = useState("no-frame") // Selected frame state
   const frameRef = useRef<HTMLDivElement>(null) // Reference for the frame container
-  const [inputMode, setInputMode] = useState<"url" | "sms" | "email" | "phone" | "wifi" | "whatsapp" | "facebook" | "twitter" | "snapchat" | "youtube">("url") // Input mode state
+  const [inputMode, setInputMode] = useState<"url" | "sms" | "email" | "phone" | "wifi" | "whatsapp" | "facebook" | "X" | "snapchat" | "youtube">("url") // Input mode state
   const [smsNumber, setSmsNumber] = useState("") // SMS number state
   const [smsMessage, setSmsMessage] = useState("") // SMS message state
   const [emailAddress, setEmailAddress] = useState("") // Email address state
@@ -39,7 +39,7 @@ export default function BarcodeGenerator() {
   const [whatsappNumber, setWhatsappNumber] = useState("") // WhatsApp number state
   const [whatsappMessage, setWhatsappMessage] = useState("") // WhatsApp message state
   const [facebookUrl, setFacebookUrl] = useState("") // Facebook profile URL state
-  const [twitterUrl, setTwitterUrl] = useState("") // Twitter profile URL state
+  const [XUrl, setXUrl] = useState("") // Twitter profile URL state
   const [snapchatUrl, setSnapchatUrl] = useState("") // Snapchat profile URL state
   const [youtubeUrl, setYoutubeUrl] = useState("") // YouTube channel URL state
 
@@ -292,8 +292,8 @@ export default function BarcodeGenerator() {
         qrValue = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`
       } else if (inputMode === "facebook") {
         qrValue = facebookUrl
-      } else if (inputMode === "twitter") {
-        qrValue = twitterUrl
+      } else if (inputMode === "X") {
+        qrValue = XUrl
       } else if (inputMode === "snapchat") {
         qrValue = snapchatUrl
       } else if (inputMode === "youtube") {
@@ -497,16 +497,17 @@ export default function BarcodeGenerator() {
             Facebook
           </button>
           <button
-            onClick={() => setInputMode("twitter")}
+            onClick={() => setInputMode("X")}
             className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
-              inputMode === "twitter"
+              inputMode === "X"
                 ? "bg-gradient-to-r from-[#ff550d] to-[#ff911d] text-white shadow-lg"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            <Twitter className="h-4 w-4" />
-            Twitter
+            <XIcon className="h-4 w-4" />
+            Formerly Twitter
           </button>
+       
           <button
             onClick={() => setInputMode("snapchat")}
             className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
@@ -673,7 +674,7 @@ export default function BarcodeGenerator() {
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <p className="text-sm text-blue-700">
-                  💡 <strong>Tip:</strong> This QR code will automatically connect devices to your WiFi network when scanned
+                <strong>Tip:</strong> This QR code will automatically connect devices to your WiFi network when scanned
                 </p>
               </div>
             </div>
@@ -740,7 +741,7 @@ export default function BarcodeGenerator() {
               
               <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                 <p className="text-sm text-green-700">
-                  💬 <strong>Tip:</strong> This QR code will open WhatsApp with the number and message ready to send
+                <strong>Tip:</strong> This QR code will open WhatsApp with the number and message ready to send
                 </p>
               </div>
             </div>
@@ -760,12 +761,12 @@ export default function BarcodeGenerator() {
               />
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <p className="text-sm text-blue-700">
-                  📘 <strong>Tip:</strong> This QR code will redirect to your Facebook profile when scanned
+                <strong>Tip:</strong> This QR code will redirect to your Facebook profile when scanned
                 </p>
               </div>
             </div>
           </div>
-        ) : inputMode === "twitter" ? (
+        ) : inputMode === "X" ? (
           <div className="space-y-4">
             <label className="text-sm font-semibold text-gray-700">
               Twitter Profile
@@ -773,14 +774,14 @@ export default function BarcodeGenerator() {
             <div className="space-y-3">
               <input
                 type="url"
-                placeholder="Enter Twitter profile URL (e.g., https://twitter.com/yourhandle)"
-                value={twitterUrl}
-                onChange={(e) => setTwitterUrl(e.target.value)}
+                placeholder="Enter X (Formerly Twitter) profile URL (e.g., https://x.com/yourhandle)"
+                value={XUrl}
+                onChange={(e) => setXUrl(e.target.value)}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors"
               />
               <div className="bg-sky-50 border border-sky-200 rounded-lg p-3">
                 <p className="text-sm text-sky-700">
-                  🐦 <strong>Tip:</strong> This QR code will redirect to your Twitter profile when scanned
+                <strong>Tip:</strong> This QR code will redirect to your Twitter profile when scanned
                 </p>
               </div>
             </div>
@@ -800,7 +801,7 @@ export default function BarcodeGenerator() {
               />
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                 <p className="text-sm text-yellow-700">
-                  👻 <strong>Tip:</strong> This QR code will redirect to your Snapchat profile when scanned
+                <strong>Tip:</strong> This QR code will redirect to your Snapchat profile when scanned
                 </p>
               </div>
             </div>
@@ -820,7 +821,7 @@ export default function BarcodeGenerator() {
               />
               <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                 <p className="text-sm text-red-700">
-                  📺 <strong>Tip:</strong> This QR code will redirect to your YouTube channel when scanned
+                <strong>Tip:</strong> This QR code will redirect to your YouTube channel when scanned
                 </p>
               </div>
             </div>
@@ -983,7 +984,7 @@ export default function BarcodeGenerator() {
             inputMode === "wifi" ? !wifiSsid || (wifiSecurity !== "nopass" && !wifiPassword) : 
             inputMode === "whatsapp" ? !whatsappNumber :
             inputMode === "facebook" ? !facebookUrl :
-            inputMode === "twitter" ? !twitterUrl :
+            inputMode === "X" ? !XUrl :
             inputMode === "snapchat" ? !snapchatUrl :
             inputMode === "youtube" ? !youtubeUrl :
             false
