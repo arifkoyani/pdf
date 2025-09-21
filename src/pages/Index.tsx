@@ -58,10 +58,7 @@ const [isOpen, setIsOpen] = useState(false);
       )}
     </nav>
 {/* <AccountBalance/> */}
-
 <BarcodeGenerator/>
-
-
 
   </>
   )
