@@ -1,15 +1,17 @@
 "use client"
 
-import { useState } from "react"
-import { Download, X, ImageIcon } from "lucide-react"
+import { useState, useRef } from "react"
+import { Download, X, ImageIcon, PaintBucket } from "lucide-react"
 import { FlipWords } from "../ui/flip-words/flip-words"
 import { ColorPicker } from "../color-picker/colorpicker"
+import SendPdfEmail from "../send-email/SendEmail"
+import html2canvas from 'html2canvas'
 
 export default function BarcodeGenerator() {
   const words = ["Better", "Fast", "Perfect", "QRCODE"]
   const [value, setValue] = useState("")
   const [angle, setAngle] = useState("0")
-  const [narrowBarWidth, setNarrowBarWidth] = useState(20) // Changed to number for slider
+  const [narrowBarWidth, setNarrowBarWidth] = useState(25) // Changed to number for slider
   const [foreColor, setForeColor] = useState("#ff550d")
   const [backColor, setBackColor] = useState("#ffffff")
   const [barcodeUrl, setBarcodeUrl] = useState<string | null>(null)
@@ -18,6 +20,9 @@ export default function BarcodeGenerator() {
   const [decorationImageUrl, setDecorationImageUrl] = useState<string | null>(null)
   const [uploadProgress, setUploadProgress] = useState(0) // Added upload progress
   const [uploading, setUploading] = useState(false) // Added uploading state
+  const [toEmail, setToEmail] = useState("") // Email state for sending
+  const [selectedFrame, setSelectedFrame] = useState("frame.png") // Selected frame state
+  const frameRef = useRef<HTMLDivElement>(null) // Reference for the frame container
 
   const API_KEY = "arif@audeflow.com_0XUgOpxRN9iqfJFxxYUDWMnHpoP7177lWf7ESbdwV0bIvXQUQgnOwqI4aQGCev5m"
 
@@ -121,27 +126,57 @@ export default function BarcodeGenerator() {
   }
 
   const downloadBarcode = async () => {
-    if (!barcodeUrl) return
+    if (!barcodeUrl || !frameRef.current) return
 
     try {
-      const response = await fetch(barcodeUrl)
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement("a")
-      a.href = url
-      a.download = `barcode-${value || "generated"}.png`
-      document.body.appendChild(a)
-      a.click()
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(a)
+      // Use html2canvas to capture the frame container with the barcode
+      const canvas = await html2canvas(frameRef.current, {
+        backgroundColor: 'transparent',
+        scale: 2, // Higher quality
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        width: frameRef.current.offsetWidth,
+        height: frameRef.current.offsetHeight,
+      })
+
+      // Convert canvas to blob and download
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = window.URL.createObjectURL(blob)
+          const a = document.createElement("a")
+          a.href = url
+          a.download = `qr-code-${selectedFrame.replace('.png', '')}-${value || "generated"}.png`
+          document.body.appendChild(a)
+          a.click()
+          window.URL.revokeObjectURL(url)
+          document.body.removeChild(a)
+        }
+      }, 'image/png')
     } catch (error) {
       console.error("Download error:", error)
+      // Fallback to original method if html2canvas fails
+      try {
+        const response = await fetch(barcodeUrl)
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = `barcode-${value || "generated"}.png`
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
+      } catch (fallbackError) {
+        console.error("Fallback download error:", fallbackError)
+      }
     }
   }
 
   return (
-    <div className="p-8 max-w-2xl mx-auto bg-white shadow-2xl rounded-3xl space-y-6 border border-gray-100">
-      <div className="text-center space-y-2">
+    <div className="p-8 max-w-7xl mx-auto bg-[#fef0e9] shadow-2xl rounded-3xl border border-gray-100">
+      {/* Header */}
+      <div className="text-center space-y-2 mb-8">
         <div className="flex flex-wrap justify-center items-center mx-auto text-neutral-600 text-2xl sm:text-3xl md:text-4xl lg:text-5xl gap-2">
           Generating To
           <div className="w-[120px] sm:w-[150px] md:w-[180px] text-left">
@@ -151,6 +186,9 @@ export default function BarcodeGenerator() {
         <p className="text-gray-600">Create custom QR codes with logo images</p>
       </div>
 
+      {/* Main Content - Two Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-[600px]">
+        {/* Left Side - Controls */}
       <div className="space-y-6">
         {/* Barcode Value */}
         <div className="space-y-2">
@@ -166,10 +204,56 @@ export default function BarcodeGenerator() {
           />
         </div>
 
-        {/* Color Picker */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ColorPicker initialColor={foreColor} onChange={setForeColor} label="Foreground Color (QR Code)" />
-          <ColorPicker initialColor={backColor} onChange={setBackColor} label="Background Color" />
+          {/* Improved Color Picker Section */}
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            Custom QRCode Styling
+            </h3>
+            <div className="space-y-4 flex flex-col gap-4">
+              {/* Foreground Color */}
+              <div className="flex  gap-4">
+
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-gray-700">Foreground Color</label>
+                <div className="flex gap-3 items-center">
+                  <div className="flex-1">
+
+                     <ColorPicker initialColor={foreColor} onChange={setForeColor} label="" />
+                  </div>
+               
+                </div>
+              </div>
+              
+              {/* Background Color */}
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-gray-700">Background Color</label>
+                <div className="flex gap-3 items-center">
+                  <div className="flex-1">
+                    <ColorPicker initialColor={backColor} onChange={setBackColor} label="" />
+                  </div>
+                </div>
+              </div>
+              </div>
+
+              
+              {/* Color Preview */}
+              <div className="mt-4 p-4 bg-white rounded-lg border-2 border-dashed border-gray-300">
+                <div className="text-center space-y-2">
+                  <p className="text-xs text-gray-500 font-medium">Color Preview</p>
+                  <div className="flex justify-center">
+                    <div 
+                      className="w-16 h-16 rounded-lg border-2 border-gray-300 flex items-center justify-center"
+                      style={{ backgroundColor: backColor }}
+                    >
+                      <div 
+                        className="w-8 h-8 rounded-md"
+                        style={{ backgroundColor: foreColor }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
 
         {/* Size Slider */}
@@ -280,23 +364,169 @@ export default function BarcodeGenerator() {
             "Generate QR Code"
           )}
         </button>
+        </div>
 
-        {barcodeUrl && (
-          <div className="bg-gray-50 rounded-xl p-6 text-center space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Generated QR Code</h3>
-            <div className="bg-white p-4 rounded-lg inline-block shadow-sm">
-              <img src={barcodeUrl || "/placeholder.svg"} alt="Generated barcode" className="max-w-full h-auto" />
-            </div>
-            <button
-              onClick={downloadBarcode}
-              className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#ff550d] to-[#ff911d] text-white font-semibold rounded-lg hover:from-[#e6490b] hover:to-[#e6820a] transition-colors shadow-md hover:shadow-lg"
-            >
-              <Download className="h-5 w-5" />
-              <span>Download QR Code</span>
-            </button>
+        {/* Right Side - Results */}
+        <div className="bg-gradient-to-br from-gray-50 to-white  flex flex-col  rounded-2xl border border-gray-200 p-6 overflow-hidden ">
+          <div className="text-center mb-6">
+            <h3 className="text-xl font-semibold text-gray-800 flex items-center justify-center gap-2">
+              QR Code Preview
+            </h3>
           </div>
-        )}
+
+          <div className="flex-1 flex items-center justify-center min-h-0">
+            {!barcodeUrl ? (
+              <div className="text-center space-y-4">
+                <div className="w-48 h-48 bg-white rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center mx-auto">
+                  <div className="text-center space-y-3">
+                    <div className="w-16 h-16 bg-gray-200 rounded-xl mx-auto flex items-center justify-center">
+                      <ImageIcon className="w-8 h-8 text-gray-400" />
+                    </div>
+                    <div>
+                      <p className="text-gray-500 font-medium">No QR Code Yet</p>
+                      <p className="text-xs text-gray-400">Enter content and generate</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="w-full  h-full overflow-hidden">
+                {/* Two Column Layout: QR Code Left, Frame Selection Right */}
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 h-full">
+                  
+                  {/* Left Side - Selected Frame Container for Screenshot */}
+                  <div className="flex flex-col   items-center space-y-4 ">
+                    <div 
+                      ref={frameRef}
+                      className="inline-block  p-4 rounded-2xl shadow-lg border border-gray-200 qr-frame-container flex-shrink-0"
+                      style={{
+                        backgroundImage: `url('/${selectedFrame}')`,
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center',
+                        width: '240px',
+                        height: '280px',
+                        position: 'relative'
+                      }}
+                    >
+                      {/* QR Code positioned inside the frame */}
+                      <div 
+                        className="absolute inset-0 flex  justify-center"
+                        style={{
+                          top: '28%',
+                          left: '50%',
+                          transform: 'translate(-50%, -25%)',
+                          width: '160px',
+                          height: '160px'
+                        }}
+                      >
+                        <img 
+                          src={barcodeUrl} 
+                          alt="Generated QR Code" 
+                          className="w-full h-full object-contain"
+                          style={{
+                            maxWidth: '150px',
+                            maxHeight: '150px'
+                          }}
+                        />
+                      </div>
+                      
+                      {/* "SCAN ME" text positioned at bottom of frame - only for frame.png */}
+                      {selectedFrame === 'frame.png' && (
+                       ""
+                      )}
+                    </div>
+
+                    {/* Action Buttons - Below QR Code */}
+                    <div className="w-full max-w-sm space-y-3">
+                      <button
+                        onClick={downloadBarcode}
+                        className="w-full inline-flex items-center justify-center gap-3 px-4 py-3 bg-gradient-to-r from-[#ff550d] to-[#ff911d] text-white font-semibold rounded-xl hover:from-[#e6490b] hover:to-[#e6820a] transition-all duration-200 shadow-lg hover:shadow-xl transform "
+                      >
+                        <Download className="h-4 w-4" />
+                        <span>Download</span>
+                      </button>
+                      
+                      {/* Email Section */}
+                      <div className="bg-white rounded-xl p-3 border border-gray-200">
+                        <label className="text-sm font-semibold text-gray-700 block mb-2">
+                        Send via Email
+                        </label>
+                        <div className="flex flex-col gap-2">
+                          <input
+                            type="email"
+                            placeholder="Enter recipient email"
+                            value={toEmail}
+                            onChange={(e) => setToEmail(e.target.value)}
+                            className="w-full border-2 border-gray-200 rounded-lg p-2 focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                          />
+                          <SendPdfEmail toEmail={toEmail} fileUrl={barcodeUrl} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Side - Frame Selection */}
+                  <div className="flex  flex-col items-center  justify-start">
+                    <div className="flex flex-col gap-3 items-center max-w-[140px]">
+                      {['frame.png', 'frame2.png', 'frame3.png'].map((frameFile, index) => (
+                        <div
+                          key={frameFile}
+                          onClick={() => setSelectedFrame(frameFile)}
+                          className={`cursor-pointer p-2 rounded-xl transition-all duration-200 w-full ${
+                            selectedFrame === frameFile 
+                              ? 'ring-3 ring-[#ff550d] border-2 border-[#ff911d] ring-opacity-50 bg-[#fef0e9] shadow-lg' 
+                              : 'hover:bg-gray-50 hover:shadow-md border border-gray-200'
+                          }`}
+                        >
+                          {/* Frame with QR Code Preview */}
+                          <div
+                            className="w-20 h-24 bg-white rounded-lg border border-gray-200 mb-2 relative mx-auto"
+                            style={{
+                              backgroundImage: `url('/${frameFile}')`,
+                              backgroundSize: 'contain',
+                              backgroundRepeat: 'no-repeat',
+                              backgroundPosition: 'center'
+                            }}
+                          >
+                            {/* QR Code positioned inside each frame preview */}
+                            <div 
+                              className="absolute inset-0 flex items-center justify-center"
+                              style={{
+                                top: '20%',
+                                left: '50%',
+                                transform: 'translate(-50%, -20%)',
+                                width: '50px',
+                                height: '50px'
+                              }}
+                            >
+                              <img 
+                                src={barcodeUrl} 
+                                alt="QR Code Preview" 
+                                className="w-full h-full object-contain"
+                                style={{
+                                  maxWidth: '40px',
+                                  maxHeight: '40px'
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <div className="text-center">
+                            {selectedFrame === frameFile && (
+                              <p className="text-xs text-[#ff550d] font-semibold"></p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
+
 
       <style>{`
         .slider::-webkit-slider-thumb {
@@ -317,6 +547,18 @@ export default function BarcodeGenerator() {
           cursor: pointer;
           border: none;
           box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Frame container styles for better rendering */
+        .qr-frame-container {
+          image-rendering: -webkit-optimize-contrast;
+          image-rendering: crisp-edges;
+        }
+        
+        .qr-frame-container img {
+          image-rendering: -webkit-optimize-contrast;
+          image-rendering: crisp-edges;
+          filter: contrast(1.1);
         }
       `}</style>
     </div>

@@ -6,8 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Copy, Upload, Loader2, Download } from "lucide-react";
 import { FlipWords } from "@/components/ui/flip-words/flip-words";
 import Spinner from "@/components/ui/loader/loader";
-
-const API_KEY = "arifhussainkoyan5@gmail.com_1oplhALdIhZQG31zqSWJKwXdixugSvGZP5JRDMnqMBaDUXS7rZCpsAMJQ7yYtrHn";
+const API_KEY = "arif@audeflow.com_0XUgOpxRN9iqfJFxxYUDWMnHpoP7177lWf7ESbdwV0bIvXQUQgnOwqI4aQGCev5m";
 
 type AppState = "select" | "uploading" | "extracting" | "ready";
 

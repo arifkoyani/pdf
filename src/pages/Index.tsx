@@ -1,9 +1,7 @@
 import { useState } from "react";
 import AccountBalance from "@/components/account-balance/AccountBalance";
-import ExcelToXml from "@/components/excel-conversions/excel-to-xml/ExcelToXml";
-import ExcelToPdf from "@/components/excel-conversions/excel-to-pdf/ExceToPdf";
-import PngToPdfConverter from "@/components/Image-to-pdf/png-to-pdf/PngToPdf";
 import BarcodeGenerator from "@/components/barcode/Barcode";
+import ExtractEmailAttachments from "@/components/extract-email-attachment/ExtractEmailAttachment";
 
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
@@ -60,6 +58,7 @@ const [isOpen, setIsOpen] = useState(false);
       )}
     </nav>
 {/* <AccountBalance/> */}
+
 <BarcodeGenerator/>
 
 
@@ -86,6 +85,8 @@ export default Index;
 // EAN8
 // GS1 - 128
 // UPCA--->GTIN12
+
+// MicroPDF417
 // {
 //   "name": "MicroPDF.png",
 //   "value": "HELLO1234567890",
@@ -107,6 +108,7 @@ export default Index;
 // ITF14
 // MaxiCode
 // MICR
+
 // MSI
 // {
 //   "name": "MSI.png",
@@ -224,8 +226,6 @@ export default Index;
 {/* <JpgToJson/> */}
 
 {/* <PdfToJson/> */}
-
-{/* <AIInvoiceParser/> */}
 
 {/* <AddPasswordToPdf/> */}
 

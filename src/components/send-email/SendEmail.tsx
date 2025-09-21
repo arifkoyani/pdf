@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-const API_KEY = "arifhussainkoyan5@gmail.com_1oplhALdIhZQG31zqSWJKwXdixugSvGZP5JRDMnqMBaDUXS7rZCpsAMJQ7yYtrHn";
+const API_KEY = "arif@audeflow.com_0XUgOpxRN9iqfJFxxYUDWMnHpoP7177lWf7ESbdwV0bIvXQUQgnOwqI4aQGCev5m";
 const SMTP_USERNAME = "arifkoyani@gmail.com";
 const SMTP_PASSWORD = "anpttursrfdgoskv"; // Gmail App Password
 
@@ -64,7 +64,17 @@ const SendPdfEmail: React.FC<SendEmailProps> = ({ toEmail, fileUrl }) => {
 
       const data = await response.json();
       if (!data.error) {
-        toast("Email sent successfully");
+        toast("Email sent successfully", {
+          description: "Your email has been delivered.",
+          style: {
+            background: "#fef0e9",   // dark background
+            color: "#ff550d",           // white text
+            fontWeight: "bold",
+            fontSize: "16px",
+            borderRadius: "8px",
+            padding: "4px",
+          },
+        }) 
       } else {
         alert("Failed: " + (data.message || "Unknown error"));
       }
