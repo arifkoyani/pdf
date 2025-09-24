@@ -2,6 +2,8 @@ import { useState } from "react";
 import AccountBalance from "@/components/account-balance/AccountBalance";
 import BarcodeGenerator from "@/components/barcode/Barcode";
 import ExtractEmailAttachments from "@/components/extract-email-attachment/ExtractEmailAttachment";
+import DataMatrixGenerator from "@/components/barcode/data-matrix/DataMatrix";
+import GTIN8Generator from "@/components/barcode/GTIN8/GTIN8";
 
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
@@ -60,14 +62,15 @@ const [isOpen, setIsOpen] = useState(false);
 {/* <AccountBalance/> */}
 <BarcodeGenerator/>
 
+{/* <GTIN8Generator/> */}
+
+
   </>
   )
 };
 
 export default Index;
 
-// GTIN14
-// DataMatrix
 // GTIN8
 // Aztec
 // /AustralianPostCode
@@ -122,27 +125,6 @@ export default Index;
 // GTIN13
 // IntelligentMail
 
-// sms 
-// curl --location --request POST 'https://api.pdf.co/v1/barcode/generate' \
-// --header 'Content-Type: application/json' \
-// --header 'x-api-key: *******************' \
-// --data-raw '{
-//   "name": "sms_qr.png",
-//   "value": "sms:+923001234567?body=Hello%20from%20QR%20code",
-//   "type": "QRCode",
-//   "inline": false,
-//   "async": false
-// }'
-
-// email 
-// mailto:someone@example.com?subject=Your%20Subject&body=Your%20message%20here
-
-// Text    
-// WiFi QR Code 
-// vCard QR Code
-// MP3 QR Code
-// PDF QR Code
-// Bitcoin QR Code
 
 
 
@@ -176,6 +158,37 @@ export default Index;
 // RoyalMailKIX
 
 
+
+
+
+
+
+
+
+
+
+{/* <DataMatrixGenerator/> */}
+{/* <BarcodeGenerator/> */}
+// DataMatrix
+// Bitcoin QR Code
+// sms 
+// curl --location --request POST 'https://api.pdf.co/v1/barcode/generate' \
+// --header 'Content-Type: application/json' \
+// --header 'x-api-key: *******************' \
+// --data-raw '{
+//   "name": "sms_qr.png",
+//   "value": "sms:+923001234567?body=Hello%20from%20QR%20code",
+//   "type": "QRCode",
+//   "inline": false,
+//   "async": false
+// }'
+
+// email 
+// mailto:someone@example.com?subject=Your%20Subject&body=Your%20message%20here
+
+// Text    done
+// WiFi QR Code  done
+// vCard QR Code done
 
 {/* <ExcelToPdf/> */}
 

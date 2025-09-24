@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Download, X, ImageIcon, PaintBucket, Link, MessageSquare, Mail, Phone, Wifi, Eye, EyeOff, MessageCircle, Youtube, Facebook, X as XIcon } from "lucide-react"
+import { Download, X, ImageIcon, PaintBucket, Link, MessageSquare, Mail, Phone, Wifi, Eye, EyeOff, MessageCircle, Youtube, Facebook, X as XIcon, User, Building, Briefcase, Globe, MapPin, FileText, Coins, DollarSign } from "lucide-react"
 import { FlipWords } from "../ui/flip-words/flip-words"
 import { ColorPicker } from "../color-picker/colorpicker"
 import SendPdfEmail from "../send-email/SendEmail"
@@ -25,7 +25,7 @@ export default function BarcodeGenerator() {
   const [toEmail, setToEmail] = useState("") // Email state for sending
   const [selectedFrame, setSelectedFrame] = useState("no-frame") // Selected frame state
   const frameRef = useRef<HTMLDivElement>(null) // Reference for the frame container
-  const [inputMode, setInputMode] = useState<"url" | "sms" | "email" | "phone" | "wifi" | "whatsapp" | "facebook" | "X" | "snapchat" | "youtube">("url") // Input mode state
+  const [inputMode, setInputMode] = useState<"url" | "plaintext" | "vcard" | "bitcoin" | "sms" | "email" | "phone" | "wifi" | "whatsapp" | "facebook" | "X" | "snapchat" | "youtube">("url") // Input mode state
   const [smsNumber, setSmsNumber] = useState("") // SMS number state
   const [smsMessage, setSmsMessage] = useState("") // SMS message state
   const [emailAddress, setEmailAddress] = useState("") // Email address state
@@ -42,6 +42,22 @@ export default function BarcodeGenerator() {
   const [XUrl, setXUrl] = useState("") // Twitter profile URL state
   const [snapchatUrl, setSnapchatUrl] = useState("") // Snapchat profile URL state
   const [youtubeUrl, setYoutubeUrl] = useState("") // YouTube channel URL state
+  const [plainText, setPlainText] = useState("") // Plain text state
+  // vCard state variables
+  const [vcardName, setVcardName] = useState("") // vCard name (N field)
+  const [vcardFullName, setVcardFullName] = useState("") // vCard full name (FN field)
+  const [vcardOrganization, setVcardOrganization] = useState("") // vCard organization (ORG field)
+  const [vcardTitle, setVcardTitle] = useState("") // vCard title (TITLE field)
+  const [vcardPhone, setVcardPhone] = useState("") // vCard phone (TEL field)
+  const [vcardEmail, setVcardEmail] = useState("") // vCard email (EMAIL field)
+  const [vcardWebsite, setVcardWebsite] = useState("") // vCard website (URL field)
+  const [vcardAddress, setVcardAddress] = useState("") // vCard address (ADR field)
+  const [vcardNote, setVcardNote] = useState("") // vCard note (NOTE field)
+  // Bitcoin QR Code state variables
+  const [cryptoType, setCryptoType] = useState<"bitcoin" | "bitcoin-cash" | "ethereum" | "litecoin" | "dash">("bitcoin") // Selected cryptocurrency
+  const [cryptoAmount, setCryptoAmount] = useState("") // Amount to send
+  const [cryptoAddress, setCryptoAddress] = useState("") // Receiver address
+  const [cryptoMessage, setCryptoMessage] = useState("") // Optional message
 
   // Frame-specific styling configurations
   const frameConfigs = {
@@ -279,7 +295,51 @@ export default function BarcodeGenerator() {
       
       // Determine the value based on input mode
       let qrValue = ""
-      if (inputMode === "sms") {
+      if (inputMode === "plaintext") {
+        qrValue = plainText
+      } else if (inputMode === "vcard") {
+        // Build vCard string
+        let vcardString = "BEGIN:VCARD\nVERSION:3.0\n"
+        
+        if (vcardName) vcardString += `N:${vcardName}\n`
+        if (vcardFullName) vcardString += `FN:${vcardFullName}\n`
+        if (vcardOrganization) vcardString += `ORG:${vcardOrganization}\n`
+        if (vcardTitle) vcardString += `TITLE:${vcardTitle}\n`
+        if (vcardPhone) vcardString += `TEL:${vcardPhone}\n`
+        if (vcardEmail) vcardString += `EMAIL:${vcardEmail}\n`
+        if (vcardWebsite) vcardString += `URL:${vcardWebsite}\n`
+        if (vcardAddress) vcardString += `ADR:;;${vcardAddress.replace(/,/g, ';')}\n`
+        if (vcardNote) vcardString += `NOTE:${vcardNote}\n`
+        
+        vcardString += "END:VCARD"
+        qrValue = vcardString
+      } else if (inputMode === "bitcoin") {
+        // Build cryptocurrency payment URL
+        let cryptoUrl = ""
+        
+        if (cryptoType === "bitcoin") {
+          cryptoUrl = `bitcoin:${cryptoAddress}`
+          if (cryptoAmount) cryptoUrl += `?amount=${cryptoAmount}`
+          if (cryptoMessage) cryptoUrl += `${cryptoAmount ? "&" : "?"}message=${encodeURIComponent(cryptoMessage)}`
+        } else if (cryptoType === "bitcoin-cash") {
+          cryptoUrl = `bitcoin:${cryptoAddress}`
+          if (cryptoAmount) cryptoUrl += `?amount=${cryptoAmount}`
+          if (cryptoMessage) cryptoUrl += `${cryptoAmount ? "&" : "?"}message=${encodeURIComponent(cryptoMessage)}`
+        } else if (cryptoType === "ethereum") {
+          cryptoUrl = `ethereum:${cryptoAddress}`
+          if (cryptoAmount) cryptoUrl += `?value=${cryptoAmount}`
+        } else if (cryptoType === "litecoin") {
+          cryptoUrl = `litecoin:${cryptoAddress}`
+          if (cryptoAmount) cryptoUrl += `?amount=${cryptoAmount}`
+          if (cryptoMessage) cryptoUrl += `${cryptoAmount ? "&" : "?"}message=${encodeURIComponent(cryptoMessage)}`
+        } else if (cryptoType === "dash") {
+          cryptoUrl = `dash:${cryptoAddress}`
+          if (cryptoAmount) cryptoUrl += `?amount=${cryptoAmount}`
+          if (cryptoMessage) cryptoUrl += `${cryptoAmount ? "&" : "?"}label=${encodeURIComponent(cryptoMessage)}`
+        }
+        
+        qrValue = cryptoUrl
+      } else if (inputMode === "sms") {
         qrValue = `sms:${smsNumber}?body=${smsMessage}`
       } else if (inputMode === "email") {
         qrValue = `mailto:${emailAddress}?subject=${emailSubject}&body=${emailMessage}`
@@ -348,7 +408,7 @@ export default function BarcodeGenerator() {
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
         a.href = url
-        a.download = `qr-code-no-frame-${value || "generated"}.png`
+        a.download = `qr-code-no-frame-${value || plainText || vcardFullName || cryptoType || "generated"}.png`
         document.body.appendChild(a)
         a.click()
         window.URL.revokeObjectURL(url)
@@ -373,7 +433,7 @@ export default function BarcodeGenerator() {
           const url = window.URL.createObjectURL(blob)
           const a = document.createElement("a")
           a.href = url
-          a.download = `qr-code-${selectedFrame.replace('.png', '')}-${value || "generated"}.png`
+          a.download = `qr-code-${selectedFrame.replace('.png', '')}-${value || plainText || vcardFullName || cryptoType || "generated"}.png`
           document.body.appendChild(a)
           a.click()
           window.URL.revokeObjectURL(url)
@@ -389,7 +449,7 @@ export default function BarcodeGenerator() {
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
         a.href = url
-        a.download = `barcode-${value || "generated"}.png`
+        a.download = `barcode-${value || plainText || vcardFullName || cryptoType || "generated"}.png`
         document.body.appendChild(a)
         a.click()
         window.URL.revokeObjectURL(url)
@@ -429,6 +489,39 @@ export default function BarcodeGenerator() {
           >
             <Link className="h-4 w-4" />
             URL
+          </button>
+          <button
+            onClick={() => setInputMode("plaintext")}
+            className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
+              inputMode === "plaintext"
+                ? "bg-gradient-to-r from-[#ff550d] to-[#ff911d] text-white shadow-lg"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            <MessageSquare className="h-4 w-4" />
+            Plain Text
+          </button>
+          <button
+            onClick={() => setInputMode("vcard")}
+            className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
+              inputMode === "vcard"
+                ? "bg-gradient-to-r from-[#ff550d] to-[#ff911d] text-white shadow-lg"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            <User className="h-4 w-4" />
+            vCard
+          </button>
+          <button
+            onClick={() => setInputMode("bitcoin")}
+            className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
+              inputMode === "bitcoin"
+                ? "bg-gradient-to-r from-[#ff550d] to-[#ff911d] text-white shadow-lg"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            <Coins className="h-4 w-4" />
+            Bitcoin QR Code
           </button>
           <button
             onClick={() => setInputMode("sms")}
@@ -545,6 +638,289 @@ export default function BarcodeGenerator() {
               rows={3}
               className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors resize-none"
             />
+          </div>
+        ) : inputMode === "plaintext" ? (
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-700">
+              Enter your plain text (Your QR Code will be generated automatically)
+            </label>
+            <textarea
+              placeholder="Enter any plain text to encode into QR code..."
+              value={plainText}
+              onChange={(e) => setPlainText(e.target.value)}
+              rows={4}
+              className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors resize-none"
+            />
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <p className="text-sm text-blue-700">
+                <strong>Tip:</strong> This will create a QR code containing your plain text. When scanned, it will display the text directly.
+              </p>
+            </div>
+          </div>
+        ) : inputMode === "vcard" ? (
+          <div className="space-y-4">
+            <label className="text-sm font-semibold text-gray-700">
+              vCard Contact Information
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Name Fields */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Name (Last, First)
+                </label>
+                <input
+                  type="text"
+                  placeholder="Doe;John;;;"
+                  value={vcardName}
+                  onChange={(e) => setVcardName(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                />
+                <p className="text-xs text-gray-500">Format: LastName;FirstName;;;</p>
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="John Doe"
+                  value={vcardFullName}
+                  onChange={(e) => setVcardFullName(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                />
+              </div>
+              
+              {/* Organization and Title */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <Building className="h-4 w-4" />
+                  Organization
+                </label>
+                <input
+                  type="text"
+                  placeholder="OpenAI"
+                  value={vcardOrganization}
+                  onChange={(e) => setVcardOrganization(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <Briefcase className="h-4 w-4" />
+                  Title/Position
+                </label>
+                <input
+                  type="text"
+                  placeholder="Software Engineer"
+                  value={vcardTitle}
+                  onChange={(e) => setVcardTitle(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                />
+              </div>
+              
+              {/* Contact Information */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  placeholder="+1234567890"
+                  value={vcardPhone}
+                  onChange={(e) => setVcardPhone(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  placeholder="john@example.com"
+                  value={vcardEmail}
+                  onChange={(e) => setVcardEmail(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                />
+              </div>
+              
+              {/* Website and Address */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <Globe className="h-4 w-4" />
+                  Website
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://example.com"
+                  value={vcardWebsite}
+                  onChange={(e) => setVcardWebsite(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Address
+                </label>
+                <input
+                  type="text"
+                  placeholder="123 Street, New York, NY 10001, USA"
+                  value={vcardAddress}
+                  onChange={(e) => setVcardAddress(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                />
+              </div>
+            </div>
+            
+            {/* Note Field - Full Width */}
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Note (Optional)
+              </label>
+              <textarea
+                placeholder="Any additional information or custom message..."
+                value={vcardNote}
+                onChange={(e) => setVcardNote(e.target.value)}
+                rows={3}
+                className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors resize-none text-sm"
+              />
+            </div>
+            
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <p className="text-sm text-blue-700">
+                <strong>Tip:</strong> This will create a vCard QR code. When scanned, users can save the contact information directly to their phone's address book.
+              </p>
+            </div>
+          </div>
+        ) : inputMode === "bitcoin" ? (
+          <div className="space-y-4">
+            <label className="text-sm font-semibold text-gray-700">
+              Cryptocurrency Payment QR Code
+            </label>
+            
+            {/* Cryptocurrency Selection */}
+            <div className="space-y-3">
+              <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <Coins className="h-4 w-4" />
+                Select Cryptocurrency
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {[
+                  { value: "bitcoin", label: "Bitcoin", color: "bg-orange-100 border-orange-300 text-orange-800" },
+                  { value: "bitcoin-cash", label: "Bitcoin Cash", color: "bg-green-100 border-green-300 text-green-800" },
+                  { value: "ethereum", label: "Ethereum", color: "bg-blue-100 border-blue-300 text-blue-800" },
+                  { value: "litecoin", label: "Litecoin", color: "bg-gray-100 border-gray-300 text-gray-800" },
+                  { value: "dash", label: "Dash", color: "bg-purple-100 border-purple-300 text-purple-800" }
+                ].map((crypto) => (
+                  <label
+                    key={crypto.value}
+                    className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                      cryptoType === crypto.value
+                        ? `${crypto.color} border-current ring-2 ring-current ring-opacity-30`
+                        : "bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="cryptoType"
+                      value={crypto.value}
+                      checked={cryptoType === crypto.value}
+                      onChange={(e) => setCryptoType(e.target.value as any)}
+                      className="sr-only"
+                    />
+                    <div className={`w-3 h-3 rounded-full border-2 ${
+                      cryptoType === crypto.value
+                        ? "border-current bg-current"
+                        : "border-gray-300"
+                    }`}></div>
+                    <span className="font-medium text-sm">{crypto.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            {/* Dynamic Input Fields Based on Selected Crypto */}
+            <div className="space-y-4">
+              {/* Amount Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" />
+                  Amount {cryptoType === "ethereum" ? "(in Wei)" : ""}
+                </label>
+                <input
+                  type="text"
+                  placeholder={cryptoType === "ethereum" ? "1000000000000000000" : "0.01"}
+                  value={cryptoAmount}
+                  onChange={(e) => setCryptoAmount(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                />
+                <p className="text-xs text-gray-500">
+                  {cryptoType === "ethereum" 
+                    ? "Enter amount in Wei (1 ETH = 1000000000000000000 Wei)"
+                    : `Enter amount in ${cryptoType === "bitcoin" ? "BTC" : cryptoType === "bitcoin-cash" ? "BCH" : cryptoType === "litecoin" ? "LTC" : "DASH"}`
+                  }
+                </p>
+              </div>
+              
+              {/* Receiver Address */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <Globe className="h-4 w-4" />
+                  Receiver Address
+                </label>
+                <input
+                  type="text"
+                  placeholder={cryptoType === "bitcoin" ? "1BoatSLRHtKNngkdXEeobR76b53LETtpyT" :
+                           cryptoType === "bitcoin-cash" ? "1BoatSLRHtKNngkdXEeobR76b53LETtpyT" :
+                           cryptoType === "ethereum" ? "0x742d35Cc6634C0532925a3b844Bc454e4438f44e" :
+                           cryptoType === "litecoin" ? "LTC1qT8Shrjw3YjL1X6XvhVjW4tqdVvHDux" :
+                           "XwnLY9Tf7Zsef8gMGL2fhWA9ZmMjt4KPwg"}
+                  value={cryptoAddress}
+                  onChange={(e) => setCryptoAddress(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm font-mono"
+                />
+                <p className="text-xs text-gray-500">
+                  Enter the {cryptoType === "bitcoin" ? "Bitcoin" : 
+                           cryptoType === "bitcoin-cash" ? "Bitcoin Cash" :
+                           cryptoType === "ethereum" ? "Ethereum" :
+                           cryptoType === "litecoin" ? "Litecoin" : "Dash"} wallet address
+                </p>
+              </div>
+              
+              {/* Message Field (Optional) */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  Message (Optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder={cryptoType === "dash" ? "Donation" : "Payment for services"}
+                  value={cryptoMessage}
+                  onChange={(e) => setCryptoMessage(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#ff550d] focus:outline-none transition-colors text-sm"
+                />
+                <p className="text-xs text-gray-500">
+                  {cryptoType === "dash" ? "This will be used as the label parameter" : "Optional message to include with the payment"}
+                </p>
+              </div>
+            </div>
+            
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+              <p className="text-sm text-yellow-700">
+                <strong>Tip:</strong> This will create a QR code that opens the appropriate wallet app with pre-filled payment details when scanned.
+              </p>
+            </div>
           </div>
         ) : inputMode === "sms" ? (
           <div className="space-y-4">
@@ -978,6 +1354,9 @@ export default function BarcodeGenerator() {
           onClick={generateBarcode}
           disabled={loading || (
             inputMode === "url" ? !value : 
+            inputMode === "plaintext" ? !plainText : 
+            inputMode === "vcard" ? !vcardFullName : 
+            inputMode === "bitcoin" ? !cryptoAddress : 
             inputMode === "sms" ? !smsNumber || !smsMessage : 
             inputMode === "email" ? !emailAddress || !emailSubject || !emailMessage : 
             inputMode === "phone" ? !phoneNumber : 
