@@ -12,7 +12,7 @@ export default function GTIN8Generator() {
   const [gtinInput, setGtinInput] = useState("") // GTIN-8 input (7 digits)
   const [angle, setAngle] = useState("0")
   const [narrowBarWidth, setNarrowBarWidth] = useState(25) // Changed to number for slider
-  const [foreColor, setForeColor] = useState("#ff550d")
+  const [foreColor, setForeColor] = useState("#000000")
   const [backColor, setBackColor] = useState("#ffffff")
   const [barcodeUrl, setBarcodeUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -191,7 +191,7 @@ export default function GTIN8Generator() {
   const API_KEY = "arif@audeflow.com_0XUgOpxRN9iqfJFxxYUDWMnHpoP7177lWf7ESbdwV0bIvXQUQgnOwqI4aQGCev5m"
 
   const mapSliderToApiValue = (sliderValue: number) => {
-    return Math.round((sliderValue / 100) * 70)
+    return Math.max(1, Math.round((sliderValue / 100) * 3))
   }
 
   // GTIN-8 validation function
@@ -262,7 +262,7 @@ export default function GTIN8Generator() {
           async: false,
           profiles: JSON.stringify({
             Angle: Number(angle),
-            NarrowBarWidth: 30,
+            NarrowBarWidth: apiNarrowBarWidth,
             ForeColor: foreColor,
             BackColor: backColor,
           }),

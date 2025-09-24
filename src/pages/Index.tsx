@@ -60,9 +60,9 @@ const [isOpen, setIsOpen] = useState(false);
       )}
     </nav>
 {/* <AccountBalance/> */}
-<BarcodeGenerator/>
+{/* <BarcodeGenerator/> */}
 
-{/* <GTIN8Generator/> */}
+<GTIN8Generator/>
 
 
   </>
