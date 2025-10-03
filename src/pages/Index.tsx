@@ -4,6 +4,8 @@ import BarcodeGenerator from "@/components/barcode/Barcode";
 import ExtractEmailAttachments from "@/components/extract-email-attachment/ExtractEmailAttachment";
 import DataMatrixGenerator from "@/components/barcode/data-matrix/DataMatrix";
 import GTIN8Generator from "@/components/barcode/GTIN8/GTIN8";
+import AIInvoiceParser from "@/components/aI-Invoice-parser/AIInvoiceParser";
+import TxtsToPdf from "@/components/merging-to-pdfs/txts-to-pdf/TxtsToPdf";
 
 const Index = () => {
 const [isOpen, setIsOpen] = useState(false);
@@ -60,9 +62,13 @@ const [isOpen, setIsOpen] = useState(false);
       )}
     </nav>
 {/* <AccountBalance/> */}
-{/* <BarcodeGenerator/> */}
+<BarcodeGenerator/>
+{/* <AIInvoiceParser/> */}
+{/* <TxtsToPdf/> */}
 
-<GTIN8Generator/>
+
+
+{/* <GTIN8Generator/> */}
 
 
   </>
@@ -121,7 +127,7 @@ export default Index;
 
 // Pharmacode	
 // PZN
-// UPCE
+// UPCE 						good
 // GTIN13
 // IntelligentMail
 
@@ -167,7 +173,7 @@ export default Index;
 
 
 
-{/* <DataMatrixGenerator/> */}
+// {/* <DataMatrixGenerator/> */} good
 {/* <BarcodeGenerator/> */}
 // DataMatrix
 // Bitcoin QR Code
@@ -216,7 +222,7 @@ export default Index;
 
 {/* <HtmlToPdf/> */}
 
-{/* <EmailToPdf/> */}
+// {/* <EmailToPdf/> */} goood
 
 {/* <NotSearchablePdf/> */}
 
@@ -316,7 +322,7 @@ export default Index;
 
 
 {/* <PdfToPngConverter/> */}
-{/* <PDFToTiffConverter/> */}
+// {/* <PDFToTiffConverter/> */} good
 {/* <PDFToJpgConverter/> */}
 {/* <PDFTowebpConverter/> */}
 
